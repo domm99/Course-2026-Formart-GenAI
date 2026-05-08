@@ -1995,7 +1995,7 @@ Ma più dati raccogliamo, più aumentano:
 
 ---
 
-== Placeholder immagine
+== Dai dati alle decisioni
 
 #align(center)[#image("images/image.png")]
 
@@ -2020,21 +2020,22 @@ Esempi:
 
 ---
 
-== AI nella vita quotidiana
+== AI è già ovunque
 
-Usiamo già AI quando usiamo:
+Prima di definire l'AI in modo preciso, partiamo da un'idea semplice:
+
+#alert[probabilmente la usiamo già ogni giorno, anche quando non ce ne accorgiamo.]
+
+Esempi rapidi:
 
 - filtri antispam;
 - suggerimenti della tastiera;
 - traduttori automatici;
 - mappe e navigatori;
-- assistenti vocali;
 - raccomandazioni su piattaforme;
-- riconoscimento facciale;
-- motori di ricerca;
 - sistemi antifrode.
 
-#alert[L’AI non è solo robot o fantascienza.]
+#alert[Più avanti vedremo questi esempi in modo più approfondito.]
 
 ---
 
@@ -2758,23 +2759,9 @@ L'AI moderna nasce dall'incontro tra:
 
 #raw(block: true, lang: "txt", "Dati + Modelli + Calcolo → Sistema AI")
 
----
-
-== I dati sono il carburante dell'AI
-
 Senza dati, un modello non può imparare pattern utili.
 
-Ma non basta avere tanti dati.
-
-Servono dati:
-
-- rilevanti;
-- corretti;
-- aggiornati;
-- rappresentativi;
-- ben organizzati;
-- accessibili;
-- trattati legalmente.
+Ma non basta avere tanti dati: servono dati rilevanti, corretti, aggiornati, rappresentativi, ben organizzati e trattati legalmente.
 
 ---
 
@@ -2843,14 +2830,158 @@ Il bias può nascere quando i dati riflettono:
 
 ---
 
-== Esempi di bias
+== Bias: idea semplice
 
-Esempi discussi spesso:
+Un sistema AI impara da esempi passati.
 
-- sistemi di recruiting che penalizzano certi profili;
-- sistemi di credito che svantaggiano aree geografiche;
-- predictive policing influenzato da dati storici distorti;
-- immagini generate con stereotipi di genere o etnia.
+Se gli esempi passati sono distorti, il sistema può imparare quella distorsione.
+
+#raw(block: true, lang: "txt", "Dati storici distorti → modello distorto → decisioni distorte")
+
+Esempio intuitivo:
+
+- se in passato un'azienda ha assunto quasi solo uomini in ruoli tecnici;
+- un sistema addestrato su quei dati può imparare che i profili maschili sono “più adatti”;
+- anche se nessuno ha scritto esplicitamente una regola discriminatoria.
+
+---
+
+== Bias: caso COMPAS
+
+Negli Stati Uniti ha fatto molto discutere COMPAS, un sistema usato per stimare il rischio di recidiva.
+
+Il caso è importante perché mostra un problema concreto:
+
+- il sistema produceva un punteggio apparentemente oggettivo;
+- quel punteggio poteva influenzare decisioni giudiziarie;
+- ProPublica ha sostenuto che il sistema generasse errori sbilanciati tra gruppi razziali.
+
+#alert[Quando un punteggio automatico entra in una decisione ad alto impatto, il bias diventa un problema sociale.]
+
+Fonte: #link("https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing")[ProPublica — Machine Bias]
+
+---
+
+== Bias: COMPAS in pratica
+
+Il punto didattico non è “l'algoritmo è cattivo”.
+
+Il punto è più sottile:
+
+- quali dati storici sono stati usati?
+- cosa significa davvero “rischio”?
+- quali errori sono più gravi?
+- chi controlla il sistema?
+- chi subisce le conseguenze?
+
+#alert[Un modello può essere matematicamente accurato e comunque socialmente problematico.]
+
+---
+
+== Bias: caso Amazon recruiting
+
+Nel 2018 Reuters ha raccontato il caso di uno strumento sperimentale di recruiting sviluppato da Amazon.
+
+L'idea era usare AI per assegnare punteggi ai CV.
+
+Il problema:
+
+- il modello era stato addestrato su dati storici di selezione del personale;
+- quei dati riflettevano un settore storicamente dominato da uomini;
+- il sistema finiva per penalizzare alcuni segnali associati a candidature femminili.
+
+Fonte: #link("https://www.reuters.com/article/us-amazon-com-jobs-automation-insight/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08G")[Reuters — Amazon recruiting tool]
+
+---
+
+== Bias: lezione dal caso recruiting
+
+Un modello può discriminare anche senza usare esplicitamente la variabile “genere”.
+
+Può usare variabili correlate, per esempio:
+
+- parole nel CV;
+- università frequentata;
+- esperienze precedenti;
+- percorsi professionali storicamente più comuni in certi gruppi.
+
+#alert[Rimuovere una colonna sensibile non elimina automaticamente il bias.]
+
+---
+
+== Bias: credito e scoring
+
+Nel credito, algoritmi e punteggi automatici possono aiutare a valutare il rischio.
+
+Ma possono anche creare problemi se usano dati storici o proxy che penalizzano certi gruppi.
+
+Esempi di variabili delicate o proxy:
+
+- area geografica;
+- professione;
+- storico creditizio;
+- tipo di contratto;
+- rete di relazioni economiche;
+- dati socio-demografici indiretti.
+
+#alert[Anche una variabile apparentemente neutra può diventare discriminatoria.]
+
+---
+
+== Bias: esempio Sicilia e credito
+
+Esempio didattico spesso citato: un sistema di scoring può penalizzare richieste provenienti da una certa area geografica, per esempio perché nei dati storici quell'area appare più rischiosa.
+
+Il rischio è questo:
+
+- il modello non valuta solo la persona;
+- valuta anche pattern aggregati del gruppo o del territorio;
+- persone affidabili possono essere penalizzate per caratteristiche indirette.
+
+Approfondimento generale sul diritto a trasparenza e logica dello scoring nel credito: #link("https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/9141964")[Garante Privacy — sistemi di informazione creditizia]
+
+---
+
+== Bias: immagini generate
+
+I modelli generativi possono riflettere stereotipi presenti nei dati online.
+
+Esempi tipici:
+
+- “CEO” rappresentato spesso come uomo bianco;
+- “infermiera” rappresentata spesso come donna;
+- “ingegnere” associato più spesso a uomini;
+- alcune etnie sovra-rappresentate in ruoli negativi o stereotipati.
+
+#alert[Il modello non inventa gli stereotipi dal nulla: spesso li assorbe dai dati.]
+
+---
+
+== Bias: perché è difficile eliminarlo
+
+Eliminare il bias è difficile perché:
+
+- spesso non sappiamo esattamente cosa il modello ha imparato;
+- le variabili sono correlate tra loro;
+- la società stessa produce dati squilibrati;
+- l'idea di “equità” può avere definizioni diverse;
+- accuratezza e giustizia non coincidono sempre.
+
+#alert[Non basta dire “lo decide il computer”: qualcuno deve progettare, controllare e rispondere delle decisioni.]
+
+---
+
+== Bias: domande da fare
+
+Quando usiamo AI in un processo decisionale, chiediamoci:
+
+- chi è rappresentato nei dati?
+- chi manca dai dati?
+- quali errori fa il sistema?
+- gli errori colpiscono tutti allo stesso modo?
+- una persona può contestare la decisione?
+- c'è supervisione umana reale?
+- il sistema è usato come supporto o come giudice automatico?
 
 ---
 
@@ -2971,6 +3102,11 @@ Esempio:
 
 #raw(block: true, lang: "txt", "Molte email già classificate come spam/non spam\n→ modello\n→ nuova email classificata automaticamente")
 
+---
+
+== Workflow di Machine Learning
+#align(center)[
+#image("assets/image-3.png")]
 ---
 
 == Perché non basta il codice?
@@ -3128,17 +3264,19 @@ Può sbagliare perché:
 
 ---
 
-== Bias
+== Bias nel modello
 
-Bias significa distorsione.
+Qui il punto non è più solo la qualità del dato.
 
-Un sistema può imparare distorsioni presenti nei dati.
+Il bias può entrare anche nelle scelte di progettazione:
 
-Esempio:
+- quali dati raccogliamo;
+- quali dati ignoriamo;
+- quale obiettivo ottimizziamo;
+- quale errore consideriamo accettabile;
+- chi valuta il risultato finale.
 
-#raw(block: true, lang: "txt", "Se in passato alcune decisioni erano ingiuste,\nil modello può imparare e ripetere quella ingiustizia.")
-
-#alert[L’AI può amplificare problemi già presenti nei dati.]
+#alert[Il bias non è solo un problema tecnico: è anche un problema organizzativo.]
 
 ---
 
@@ -3536,7 +3674,9 @@ AI può aiutare a:
 
 ---
 
-== Prompt semplice
+== Assaggio: prompt semplice
+
+Questa parte anticipa la lezione sul Prompt Engineering.
 
 #raw(block: true, lang: "txt", "Scrivi una email a un cliente per scusarti del ritardo.")
 
@@ -3550,7 +3690,7 @@ Problema:
 
 ---
 
-== Prompt migliore
+== Assaggio: prompt migliore
 
 #raw(block: true, lang: "txt", "Agisci come assistente amministrativo.\nScrivi una email formale e gentile a un cliente.\nDevi scusarti per un ritardo di consegna di 2 giorni.\nNon ammettere responsabilità legali.\nProponi di ricontattarlo appena la spedizione parte.\nMassimo 120 parole.")
 
