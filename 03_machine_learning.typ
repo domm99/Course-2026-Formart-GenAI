@@ -76,1102 +76,439 @@ Alla fine della lezione dovreste saper spiegare, a parole semplici:
 - perché i modelli sbagliano;
 - perché dal Machine Learning classico si arriva al Deep Learning.
 
-#alert[Obiettivo: capire l'idea, non fare matematica avanzata.]
+---
+
+== Mappa mentale
+
+#raw(block: true, lang: "txt", "Dati → esempi → modello → errore → correzione → modello migliore → uso su casi nuovi")
+
+Questa è l’idea di quasi tutto il Machine Learning.
 
 ---
 
-== Roadmap
 
-1. Perché il codice tradizionale non basta sempre
-2. Cos'è il Machine Learning
-3. Dati, esempi, etichette e feature
-4. Cos'è un modello
-5. Workflow di addestramento
-6. Modelli semplici
-7. Valutazione degli errori
-8. Tipi di task
-9. Dal Machine Learning al Deep Learning
-10. Casi pratici ed esercizi
+== Workflow di Machine Learning
+#align(center)[
+#image("assets/image-3.png")]
 
 ---
 
-== La domanda di oggi
+== La domanda chiave
 
-=== Come può una macchina imparare dai dati?
+Come può una macchina passare da esempi del passato a decisioni su casi nuovi?
 
-Non nel senso umano di “capire il mondo”.
+Esempio:
 
-Ma nel senso pratico di:
+- ho visto tante email già classificate;
+- arriva una nuova email;
+- voglio capire se è spam, reclamo, urgente, normale.
 
-- osservare esempi;
-- trovare regolarità;
-- usarle su casi nuovi;
-- migliorare un risultato utile.
-
-#alert[Il Machine Learning è apprendimento da esempi.]
+#alert[Il Machine Learning è il ponte tra esempi passati e casi nuovi.]
 
 ---
 
-== Esempio di partenza
+== Il Machine Learning in una frase
 
-Immaginiamo di voler riconoscere email di reclamo.
+Il Machine Learning fornisce metodi per estrarre modelli di conoscenza da insiemi di dati.
 
-Email A:
+Esempi:
 
-#raw(block: true, lang: "txt", "Sono molto deluso dal servizio. La consegna è in ritardo di 10 giorni.")
+- classificare clienti fedeli o a rischio;
+- riconoscere immagini mediche;
+- prevedere consumi energetici;
+- stimare prezzi;
+- suggerire prodotti;
+- rilevare frodi.
 
-Email B:
+---
 
-#raw(block: true, lang: "txt", "Vorrei informazioni sui tempi di consegna del prodotto.")
+== Quando ha senso usare ML?
+
+- abbiamo dati sufficienti;
+- il problema ha pattern ricorrenti;
+- non è facile scrivere regole a mano;
+- possiamo misurare se il modello sbaglia;
+- l’errore è gestibile;
+- una persona può supervisionare il risultato.
+
+#alert[Il ML non è sempre la soluzione migliore.]
+
+---
+
+== Quando NON serve ML?
+
+- calcolare l’IVA;
+- ordinare una lista alfabetica;
+- applicare una regola aziendale chiara;
+- inviare una email automatica a una data fissa;
+- controllare se un campo obbligatorio è vuoto.
+
+Qui basta software tradizionale.
+
+---
+
+== Un esempio semplice: il meteo in ufficio
+
+Vogliamo prevedere quanta elettricità consumerà un ufficio.
+
+Dati disponibili:
+
+- temperatura esterna;
+- giorno della settimana;
+- numero di persone presenti;
+- consumo elettrico misurato.
 
 Domanda:
 
-- quale delle due è un reclamo?
-- come lo spiegheremmo a un computer?
+#alert[Possiamo imparare una relazione tra questi dati e il consumo?]
 
 ---
 
-== Regole scritte a mano
-
-Potremmo scrivere regole come:
-
-#raw(block: true, lang: "txt", "SE il testo contiene \"deluso\" ALLORA reclamo\nSE il testo contiene \"ritardo\" ALLORA reclamo\nSE il testo contiene \"pessimo\" ALLORA reclamo")
-
-Questo approccio può funzionare per casi semplici.
-
-Ma il linguaggio umano è molto più vario.
-
----
-
-== Il problema delle regole
-
-Questa email è un reclamo?
-
-#raw(block: true, lang: "txt", "Sono tre settimane che attendo una risposta.\nMi sembra un comportamento poco professionale.")
-
-Non contiene necessariamente parole come:
-
-- reclamo;
-- pessimo;
-- arrabbiato;
-- deluso.
-
-Eppure un umano capisce che c'è un problema.
-
----
-
-== Il linguaggio è pieno di sfumature
-
-Quando le persone scrivono, possono essere:
-
-- dirette;
-- indirette;
-- sarcastiche;
-- educate ma irritate;
-- confuse;
-- sintetiche;
-- prolisse;
-- tecniche;
-- emotive.
-
-#alert[Scrivere tutte le regole possibili diventa impossibile.]
-
----
-
-== Quando il codice tradizionale va benissimo
-
-Il codice classico è perfetto quando le regole sono chiare.
-
-Esempi:
-
-- calcolare l'IVA;
-- ordinare una tabella;
-- verificare se un campo è vuoto;
-- calcolare uno sconto;
-- generare un numero di protocollo;
-- controllare una scadenza.
-
-#alert[Non tutto deve essere AI.]
-
----
-
-== Quando il Machine Learning diventa utile
-
-Il Machine Learning è utile quando:
-
-- le regole sono troppe;
-- ci sono molti casi particolari;
-- abbiamo esempi del passato;
-- il problema riguarda testo, immagini, audio o comportamento;
-- il risultato può essere probabilistico;
-- vogliamo adattarci a nuovi dati.
-
----
-
-== Idea centrale
-
-Programmazione tradizionale:
-
-#raw(block: true, lang: "txt", "Regole + Dati → Risultato")
-
-Machine Learning:
-
-#raw(block: true, lang: "txt", "Dati + Risultati attesi → Modello\nModello + Nuovi dati → Nuova previsione")
-
-#alert[Non scriviamo tutte le regole: facciamo imparare uno schema dai dati.]
-
----
-
-== Un'analogia semplice
-
-=== Insegnare a riconoscere frutta
-
-A un bambino non spieghiamo la formula matematica della mela.
-
-Gli mostriamo tanti esempi:
-
-- questa è una mela;
-- questa è una pera;
-- questa è una banana;
-- questa mela è verde;
-- questa mela è rossa;
-- questa mela è tagliata.
-
-Piano piano impara a riconoscere nuovi esempi.
-
----
-
-== Il Machine Learning fa qualcosa di simile
-
-Un modello vede molti esempi.
-
-Da questi esempi prova a imparare:
-
-- quali caratteristiche sono importanti;
-- quali combinazioni ricorrono;
-- quali segnali distinguono una categoria da un'altra;
-- quali pattern aiutano a prevedere un risultato.
-
-#alert[Non capisce come un umano, ma può riconoscere pattern utili.]
-
----
-
-== Parte 1 — Cos'è il Machine Learning?
-
-=== Definizione semplice
-
-Il Machine Learning è un insieme di tecniche che permettono a un sistema di migliorare su un compito usando dati ed esempi.
-
-Invece di programmare manualmente ogni regola, addestriamo un modello.
-
-#alert[Machine Learning = imparare regolarità dai dati.]
-
----
-
-== Tre parole fondamentali
-
-Per capire il Machine Learning servono tre parole:
-
-- dati;
-- modello;
-- addestramento.
-
-Tutto il resto viene dopo.
-
----
-
-== Dati
-
-I dati sono gli esempi da cui il sistema impara.
-
-Possono essere:
-
-- righe di una tabella;
-- email;
-- immagini;
-- registrazioni audio;
-- log di macchine;
-- transazioni;
-- recensioni;
-- comportamenti degli utenti.
-
----
-
-== Modello
+== Che cos’è un modello?
 
 Un modello è una rappresentazione semplificata della realtà.
 
-Serve a rispondere a una domanda.
+Non è la realtà.
+
+È uno strumento che ci permette di fare una previsione, una classificazione o una decisione.
+
+Esempio:
+
+#alert[Temperatura alta → più aria condizionata → più consumo.]
+
+---
+
+== Modello: analogia della mappa
+
+Una mappa non è il territorio.
+
+Però è utile per orientarsi.
+
+Un modello ML è simile:
+
+- semplifica la realtà;
+- ignora dettagli inutili;
+- conserva ciò che serve al compito;
+- può essere sbagliato o incompleto.
+
+---
+
+== Modello: esempio non informatico
+
+Un medico usa modelli mentali.
+
+Sintomi osservati:
+
+- febbre;
+- tosse;
+- stanchezza.
+
+Ipotesi:
+
+- influenza;
+- covid;
+- allergia;
+- altra infezione.
+
+#alert[Anche gli esseri umani usano modelli semplificati.]
+
+---
+
+== Modello ML: input e output
+
+#raw(block: true, lang: "txt", "Input → modello → output")
 
 Esempi:
 
-- questa email è spam?
-- questo cliente comprerà ancora?
-- quale prezzo è ragionevole?
-- questa immagine contiene un cane?
-- questa macchina sta per guastarsi?
-
-#alert[Un modello non è la realtà: è uno strumento per fare previsioni.]
+- email → modello → spam/non spam;
+- temperatura → modello → consumo previsto;
+- foto → modello → cane/gatto;
+- storico cliente → modello → rischio abbandono.
 
 ---
 
-== Addestramento
+== Feature: cosa guarda il modello?
 
-L'addestramento è la fase in cui il modello osserva esempi e aggiusta il proprio comportamento.
+Le feature sono le caratteristiche usate dal modello.
 
-Idea intuitiva:
+Esempio email:
 
-- prova una previsione;
-- confronta con la risposta corretta;
-- misura l'errore;
-- corregge un po' il modello;
-- ripete molte volte.
-
----
-
-== Esempio: email spam
-
-Dataset:
-
-#raw(block: true, lang: "txt", "Email 1 → spam\nEmail 2 → non spam\nEmail 3 → spam\nEmail 4 → non spam\n...")
-
-Il modello impara quali segnali sono spesso associati allo spam.
-
-Poi riceve una nuova email e prova a classificarla.
-
----
-
-== Esempio: prezzo di una casa
-
-Dati storici:
-
-#raw(block: true, lang: "txt", "mq, zona, piano, stato, prezzo finale")
-
-Il modello prova a imparare una relazione tra caratteristiche della casa e prezzo.
-
-Poi riceve una nuova casa:
-
-#raw(block: true, lang: "txt", "80 mq, zona centrale, secondo piano, ristrutturata")
-
-e stima un prezzo.
-
----
-
-== Esempio: manutenzione predittiva
-
-Una macchina industriale produce dati:
-
-- temperatura;
-- vibrazioni;
-- pressione;
-- errori;
-- ore di lavoro;
-- consumi;
-- storico guasti.
-
-Il modello può imparare a riconoscere segnali che precedono un guasto.
-
-#alert[Obiettivo: intervenire prima che il problema blocchi la produzione.]
-
----
-
-== Parte 2 — Esempi, feature ed etichette
-
-Per addestrare un modello dobbiamo trasformare la realtà in esempi utilizzabili.
-
-Parole chiave:
-
-- esempio;
-- feature;
-- etichetta;
-- dataset.
-
----
-
-== Cos'è un esempio?
-
-Un esempio è un caso osservato.
-
-Esempi:
-
-- una email;
-- una vendita;
-- un cliente;
-- una foto;
-- una richiesta di assistenza;
-- una misurazione di sensore;
-- una transazione bancaria.
-
-Ogni esempio contiene informazioni utili per imparare.
-
----
-
-== Cos'è una feature?
-
-Una feature è una caratteristica dell'esempio.
-
-Esempio cliente:
-
-- età;
-- città;
-- numero acquisti;
-- spesa media;
-- ultimo acquisto;
-- numero reclami;
-- canale preferito.
-
-#alert[Le feature sono gli indizi che il modello usa.]
-
----
-
-== Feature in una email
-
-Per una email, possibili feature sono:
-
-- parole presenti;
 - lunghezza del testo;
+- parole presenti;
+- numero di link;
+- mittente sconosciuto;
 - presenza di allegati;
-- mittente;
-- orario di invio;
-- tono del messaggio;
-- presenza di parole urgenti;
-- argomento principale.
+- tono del messaggio.
+
+#alert[Il modello non vede “il mondo”: vede le feature che gli diamo.]
 
 ---
 
-== Feature in un'immagine
+== Target: cosa vogliamo prevedere?
 
-Per un'immagine, le feature possono essere:
-
-- colori;
-- bordi;
-- forme;
-- texture;
-- parti dell'oggetto;
-- posizione degli elementi;
-- combinazioni di pixel.
-
-Nel Deep Learning molte feature vengono imparate automaticamente.
-
----
-
-== Cos'è un'etichetta?
-
-L'etichetta è la risposta corretta che vogliamo insegnare al modello.
+Il target è la risposta che vogliamo imparare.
 
 Esempi:
 
 - spam / non spam;
-- reclamo / non reclamo;
-- prezzo finale;
-- guasto / non guasto;
-- cane / gatto;
-- cliente perso / cliente mantenuto.
+- consumo elettrico;
+- prezzo di una casa;
+- cliente a rischio / non a rischio;
+- immagine benigna / maligna;
+- ritardo previsto in giorni.
 
 ---
 
-== Dataset etichettato
+== Dataset: tabella degli esempi
 
-Un dataset etichettato contiene esempi + risposta corretta.
+Un dataset è una raccolta di esempi.
 
-#raw(block: true, lang: "txt", "Email: \"Hai vinto un premio\" → spam\nEmail: \"Riunione alle 15\" → non spam\nEmail: \"Il prodotto è arrivato rotto\" → reclamo")
+Ogni riga è un caso.
 
-Questo permette l'apprendimento supervisionato.
+Ogni colonna è una caratteristica o una risposta.
 
----
-
-== Dataset non etichettato
-
-A volte abbiamo solo esempi, senza risposta corretta.
-
-#raw(block: true, lang: "txt", "Cliente 1: acquisti, spesa, visite\nCliente 2: acquisti, spesa, visite\nCliente 3: acquisti, spesa, visite")
-
-In questo caso possiamo cercare gruppi, somiglianze o pattern.
-
-Questo è apprendimento non supervisionato.
+#alert[Il dataset è il materiale da cui il modello impara.]
 
 ---
 
-== Dati buoni vs dati cattivi
+== Dataset: esempio email
 
-Il modello impara dai dati che gli diamo.
-
-Se i dati sono:
-
-- sbagliati;
-- incompleti;
-- duplicati;
-- vecchi;
-- distorti;
-- non rappresentativi;
-
-anche il modello sarà problematico.
-
-#alert[Garbage in, garbage out.]
+#raw(block: true, lang: "txt", "testo_email | n_link | mittente_noto | categoria\n--------------------------------------------------\n\"Hai vinto un premio\" | 3 | no | spam\n\"Riunione domani\"    | 0 | si | normale\n\"Pagamento urgente\"  | 1 | no | sospetta")
 
 ---
 
-== Esempio: dati sbilanciati
+== Dataset: esempio consumi
 
-Immaginiamo un dataset di email:
-
-#raw(block: true, lang: "txt", "990 email normali\n10 email spam")
-
-Il modello potrebbe imparare a dire sempre “non spam”.
-
-Risultato:
-
-- accuratezza apparentemente alta;
-- ma non riconosce lo spam.
-
-#alert[Bisogna guardare bene cosa c'è nei dati.]
+#raw(block: true, lang: "txt", "giorno | temperatura | persone | consumo_kwh\n--------------------------------------------\nlunedi | 24°C | 35 | 180\nmartedi | 29°C | 42 | 230\nmercoledi | 31°C | 40 | 250")
 
 ---
 
-== Esempio: dati non rappresentativi
+== Parametri: le manopole del modello
 
-Vogliamo creare un modello per riconoscere scarpe.
+I parametri sono valori interni che il modello modifica durante l’apprendimento.
 
-Ma nel dataset ci sono quasi solo scarpe da ginnastica.
+Metafora:
 
-Quando arriva una scarpa elegante, il modello può sbagliare.
+- il modello è una radio;
+- i parametri sono le manopole;
+- l’addestramento cerca la sintonia migliore.
 
-#alert[Il modello conosce bene solo il mondo che ha visto nei dati.]
-
----
-
-== Parte 3 — Cos'è davvero un modello?
-
-=== Idea fondamentale
-
-Un modello è una macchina per trasformare input in output.
-
-Input:
-
-- dati del caso nuovo.
-
-Output:
-
-- previsione;
-- classificazione;
-- stima;
-- gruppo;
-- decisione suggerita.
+#alert[Imparare = trovare parametri che funzionano bene.]
 
 ---
 
-== Modello come ricetta
+== Iperparametri: scelte prima dell’addestramento
 
-Analogia:
+Gli iperparametri sono scelte fatte da chi costruisce il modello.
 
-Un modello è come una ricetta imparata da tanti esempi.
+Esempi:
 
-Ha capito che certi ingredienti portano spesso a un certo risultato.
+- quanto deve essere profondo un albero decisionale;
+- quanti vicini usare nel KNN;
+- quanti cluster cercare in k-means;
+- quanto velocemente aggiornare i parametri;
+- quante epoche di addestramento fare.
 
-Esempio:
-
-- molte parole sospette + mittente sconosciuto + link strani → forse spam.
-
-#alert[La ricetta è semplificata e può sbagliare.]
-
----
-
-== Modello come lente
-
-Un modello è anche una lente.
-
-Ti fa vedere alcuni aspetti della realtà, ma ne nasconde altri.
-
-Esempio:
-
-- un modello di vendita guarda prezzo, stagione e prodotto;
-- ma magari ignora una crisi economica improvvisa;
-- oppure ignora un evento locale importante.
-
-#alert[Ogni modello è una semplificazione.]
+#alert[Parametri: li impara il modello. Iperparametri: li scegliamo noi.]
 
 ---
 
-== Modello come studente
+== Parametri vs iperparametri
 
-Un modello assomiglia a uno studente che fa esercizi.
-
-- vede esempi;
-- prova risposte;
-- riceve correzioni;
-- migliora;
-- poi fa un test su esercizi nuovi.
-
-Se ha solo memorizzato, fallisce sui casi nuovi.
+#raw(block: true, lang: "txt", "Parametri\n- appresi dai dati\n- cambiano durante training\n- esempio: pendenza di una retta\n\nIperparametri\n- scelti prima\n- controllano il processo\n- esempio: numero di cluster K")
 
 ---
 
-== Modello semplice: una soglia
+== Il ciclo base di apprendimento
 
-Il modello più semplice possibile può essere una soglia.
-
-Esempio:
-
-#raw(block: true, lang: "txt", "SE importo > 1000 euro\nALLORA richiedi approvazione")
-
-Questo non è ancora “intelligente”, ma ci aiuta a capire l'idea:
-
-input → regola/modello → output.
+#raw(block: true, lang: "txt", "1. il modello fa una previsione\n2. confrontiamo la previsione con la risposta corretta\n3. misuriamo l’errore\n4. correggiamo i parametri\n5. ripetiamo tante volte")
 
 ---
 
-== Modello semplice: punteggio
+== Il concetto di errore
 
-Un modello può assegnare un punteggio.
+Il modello sbaglia quando la sua risposta è diversa dalla risposta attesa.
 
-Esempio email urgente:
+Esempi:
 
-#raw(block: true, lang: "txt", "+2 se contiene \"urgente\"\n+2 se contiene \"bloccato\"\n+1 se arriva da cliente importante\n+1 se ha molti punti esclamativi")
+- consumo reale: 250 kWh, consumo previsto: 230 kWh;
+- email reale: spam, modello: non spam;
+- cliente reale: abbandona, modello: non abbandona.
 
-Se il punteggio supera una soglia, segnaliamo alta priorità.
-
----
-
-== Modello semplice: linea
-
-Per stimare un numero, un modello può usare una relazione semplice.
-
-Esempio intuitivo:
-
-- più metri quadrati ha una casa, più il prezzo tende a salire;
-- più chilometri ha un'auto, più il prezzo tende a scendere;
-- più reclami ha un cliente, più aumenta il rischio di abbandono.
-
-#alert[Non serve la formula: conta capire la relazione.]
+#alert[L’errore è il segnale che guida l’apprendimento.]
 
 ---
 
-== Modello semplice: albero decisionale
+== Loss function, detta semplice
 
-Un albero decisionale fa domande in sequenza.
+La loss è un numero che misura quanto il modello sta sbagliando.
 
-#raw(block: true, lang: "txt", "Il cliente ha scritto \"urgente\"?\n├─ sì → ha già aperto altri ticket?\n│  ├─ sì → priorità alta\n│  └─ no → priorità media\n└─ no → priorità bassa")
+Loss alta:
 
-È intuitivo perché assomiglia a un diagramma di decisione.
+- il modello sta sbagliando molto.
 
----
+Loss bassa:
 
-== Albero decisionale: perché piace
+- il modello sta sbagliando poco.
 
-Vantaggi:
-
-- facile da spiegare;
-- simile a domande umane;
-- utile per esempi didattici;
-- può gestire diverse condizioni.
-
-Svantaggi:
-
-- può diventare molto grande;
-- può imparare troppo a memoria;
-- può essere fragile se i dati cambiano.
+#alert[L’addestramento prova a ridurre la loss.]
 
 ---
 
-== Modello semplice: vicini più simili
+== Allenare un modello è come regolare una ricetta
 
-Un altro approccio è guardare i casi più simili già visti.
+Immaginiamo di voler fare una torta.
 
-Domanda:
+Ogni tentativo modifica:
 
-- questo nuovo cliente assomiglia a quali clienti del passato?
-- questa email assomiglia a quali email già classificate?
-- questa casa assomiglia a quali case già vendute?
+- farina;
+- zucchero;
+- temperatura;
+- tempo di cottura.
 
-#alert[Idea: casi simili spesso hanno risposte simili.]
+Assaggiamo, valutiamo l’errore, correggiamo.
 
----
-
-== Analogia: chiedere ai vicini
-
-Devo stimare il prezzo di una casa.
-
-Guardo case simili:
-
-- stessa zona;
-- metri quadrati simili;
-- stato simile;
-- piano simile.
-
-Poi faccio una stima basata sui prezzi delle case più simili.
-
----
-
-== Modello semplice: gruppi
-
-A volte non voglio prevedere una risposta.
-
-Voglio solo capire se ci sono gruppi naturali.
-
-Esempio clienti:
-
-- clienti occasionali;
-- clienti fedeli;
-- clienti ad alto valore;
-- clienti a rischio;
-- clienti interessati solo a promozioni.
-
-Questo è clustering.
-
----
-
-== Parte 4 — Workflow di addestramento
-
-Ora vediamo il flusso tipico.
-
-Non è solo “butto dati dentro e ottengo AI”.
-
-Serve un processo.
-
-#alert[Il Machine Learning è anche organizzazione, pulizia e controllo.]
+#alert[Il ML fa qualcosa di simile, ma con numeri e dati.]
 
 ---
 
 == Workflow completo
 
-Flusso tipico:
-
-#raw(block: true, lang: "txt", "1. Definire il problema\n2. Raccogliere dati\n3. Pulire e preparare dati\n4. Dividere train/validation/test\n5. Scegliere un modello\n6. Addestrare\n7. Valutare\n8. Migliorare\n9. Mettere in uso\n10. Monitorare nel tempo")
+#raw(block: true, lang: "txt", "Problema → raccolta dati → analisi dati → feature → split\n→ scelta modello → training → validazione\n→ test finale → rilascio → monitoraggio")
 
 ---
 
-== Step 1 — Definire il problema
+== Workflow: 1. definire il problema
 
 Prima domanda:
 
-Che cosa vogliamo ottenere?
+#alert[Che cosa vogliamo ottenere?]
 
 Esempi:
 
-- prevedere vendite;
-- classificare reclami;
-- stimare tempi di consegna;
-- raggruppare clienti;
-- individuare anomalie;
-- suggerire prodotti.
+- ridurre email spam;
+- prevedere consumi;
+- trovare clienti a rischio;
+- raggruppare reclami;
+- stimare tempi di consegna.
 
-#alert[Un problema vago produce un modello inutile.]
-
----
-
-== Domanda corretta vs domanda vaga
-
-Domanda vaga:
-
-#raw(block: true, lang: "txt", "Vogliamo usare l’AI per migliorare il servizio clienti.")
-
-Domanda migliore:
-
-#raw(block: true, lang: "txt", "Vogliamo classificare automaticamente i ticket in 5 categorie\ne stimare quali hanno priorità alta entro 2 ore dalla ricezione.")
-
-#alert[Il problema deve essere misurabile.]
+Senza problema chiaro, il modello non serve.
 
 ---
 
-== Step 2 — Raccogliere i dati
+== Workflow: 2. raccogliere i dati
 
-Dobbiamo capire:
+Fonti possibili:
 
-- quali dati servono;
-- dove sono salvati;
-- chi può usarli;
-- se sono completi;
-- se sono aggiornati;
-- se possiamo usarli legalmente;
-- se contengono dati personali o sensibili.
+- database aziendali;
+- Excel;
+- email;
+- ticket assistenza;
+- sensori;
+- log;
+- CRM;
+- ERP;
+- dataset pubblici.
 
----
-
-== Step 3 — Pulire i dati
-
-La pulizia dei dati può includere:
-
-- rimuovere duplicati;
-- correggere errori;
-- uniformare formati;
-- gestire valori mancanti;
-- eliminare campi inutili;
-- anonimizzare dati personali;
-- controllare casi strani.
-
-#alert[Spesso la pulizia richiede più tempo dell'addestramento.]
+#alert[La raccolta dati è spesso più difficile del modello.]
 
 ---
 
-== Esempio di pulizia dati
+== Workflow: 3. capire la qualità dei dati
 
-Prima:
+Domande utili:
 
-#raw(block: true, lang: "txt", "Mario Rossi\nM. Rossi\nROSSI MARIO\nmario.rossi@email.it\nMario Rossi ")
-
-Potrebbero essere la stessa persona.
-
-Se non sistemiamo il dato, il sistema può contare cinque clienti diversi.
+- mancano valori?
+- ci sono errori?
+- ci sono duplicati?
+- i dati sono aggiornati?
+- rappresentano davvero il problema?
+- ci sono bias?
+- abbiamo abbastanza esempi?
 
 ---
 
-== Step 4 — Preparare le feature
+== Workflow: 4. preparare le feature
 
-Preparare le feature significa trasformare i dati in forma utile.
+Preparare feature significa trasformare i dati in qualcosa che il modello può usare.
 
 Esempi:
 
-- da data di nascita a età;
-- da testo email a parole importanti;
-- da indirizzo a zona geografica;
-- da storico acquisti a spesa media;
-- da log macchina a temperatura media.
-
-#alert[Questa fase si chiama spesso feature engineering.]
+- data → giorno della settimana;
+- email → numero di link;
+- testo → parole importanti;
+- immagine → pixel;
+- cliente → numero acquisti ultimi 6 mesi.
 
 ---
 
-== Feature engineering
+== Workflow: 5. dividere i dati
 
-Il feature engineering è l'arte di scegliere buoni indizi.
+In genere dividiamo il dataset in tre parti:
 
-Esempio per prevedere ritardi di consegna:
+- training set;
+- validation set;
+- test set.
 
-- distanza;
-- corriere;
-- periodo dell'anno;
-- meteo;
-- area geografica;
-- tipo di prodotto;
-- storico ritardi.
-
-#alert[Buoni indizi aiutano molto il modello.]
+#alert[Serve per capire se il modello funziona davvero su dati nuovi.]
 
 ---
 
-== Step 5 — Dividere i dati
+== Training set
 
-Di solito dividiamo i dati in tre parti:
+È la parte usata per addestrare il modello.
 
-- training set: per imparare;
-- validation set: per scegliere e migliorare il modello;
-- test set: per valutare alla fine su dati mai usati.
+Il modello vede questi esempi e modifica i propri parametri.
 
-#alert[Come a scuola: esercizi, simulazioni, esame finale.]
+Metafora:
 
----
-
-== Analogia scolastica
-
-Training set:
-
-- gli esercizi fatti in classe.
-
-Validation set:
-
-- le verifiche di prova.
-
-Test set:
-
-- l'esame finale con esercizi nuovi.
-
-Se lo studente conosce già le domande dell'esame, il risultato non vale.
+#alert[È il materiale su cui lo studente studia.]
 
 ---
 
-== Step 6 — Scegliere un modello
+== Validation set
 
-Non esiste un modello migliore per tutto.
+È usato durante lo sviluppo per controllare come sta andando.
 
-La scelta dipende da:
+Serve a:
 
-- tipo di dato;
-- quantità di dati;
-- obiettivo;
-- bisogno di spiegabilità;
-- risorse disponibili;
-- rischio dell'errore.
+- scegliere tra modelli diversi;
+- regolare iperparametri;
+- accorgersi di overfitting;
+- evitare di fidarsi troppo del training set.
 
----
+Metafora:
 
-== Step 7 — Addestrare
-
-Durante l'addestramento il modello:
-
-- guarda esempi;
-- produce risposte;
-- confronta con le risposte corrette;
-- misura quanto sbaglia;
-- modifica i propri parametri;
-- ripete il processo.
-
-#alert[Imparare = ridurre l'errore sui dati di training.]
+#alert[È una simulazione d’esame.]
 
 ---
 
-== Cosa sono i parametri?
+== Test set
 
-I parametri sono le “manopole interne” del modello.
+È usato solo alla fine.
 
-Analogia:
+Serve a valutare il modello su dati che non ha mai usato per imparare.
 
-- una radio ha manopole per volume e frequenza;
-- un modello ha numeri interni che regolano le sue decisioni;
-- durante l'addestramento queste manopole vengono aggiustate.
+Metafora:
 
-#alert[Non dobbiamo conoscere ogni manopola, ma sapere che esistono.]
+#alert[È l’esame vero.]
 
 ---
 
-== Step 8 — Valutare
+== Quanti dati per ogni set?
 
-Dopo l'addestramento chiediamo:
-
-- quanto sbaglia?
-- su quali casi sbaglia?
-- sbaglia in modo accettabile?
-- funziona anche su dati nuovi?
-- è abbastanza spiegabile?
-- è giusto usarlo in quel contesto?
+#align(center)[
+#image("assets/image-4.png")]
 
 ---
 
-== Step 9 — Migliorare
+== Perché non testare sugli stessi dati?
 
-Se il modello non va bene, possiamo:
+Se studente e professore usano sempre le stesse domande, il voto non misura davvero la comprensione.
 
-- raccogliere più dati;
-- pulire meglio i dati;
-- aggiungere feature;
-- cambiare modello;
-- modificare impostazioni;
-- bilanciare il dataset;
-- semplificare il problema.
+Il modello potrebbe semplicemente aver imparato a memoria.
 
----
-
-== Step 10 — Mettere in uso
-
-Mettere un modello in produzione significa usarlo nel mondo reale.
-
-Qui servono:
-
-- integrazione con software aziendali;
-- controlli;
-- responsabilità;
-- monitoraggio;
-- aggiornamenti;
-- gestione degli errori.
-
-#alert[Il lavoro non finisce quando il modello funziona in laboratorio.]
-
----
-
-== Monitoraggio nel tempo
-
-Un modello può peggiorare nel tempo.
-
-Perché?
-
-- cambiano i clienti;
-- cambiano i prodotti;
-- cambiano le abitudini;
-- cambiano i dati;
-- cambia il mercato;
-- cambiano le parole usate dalle persone.
-
-#alert[Un modello va controllato e aggiornato.]
-
----
-
-== Esempio: spam nel tempo
-
-I filtri antispam devono aggiornarsi continuamente.
-
-Gli spammer cambiano:
-
-- parole;
-- link;
-- mittenti;
-- immagini;
-- tecniche di inganno.
-
-Un modello addestrato anni fa potrebbe non bastare più.
-
----
-
-== Parte 5 — Come si impara riducendo l'errore
-
-Ora introduciamo l'idea di errore.
-
-Non faremo matematica.
-
-Ci basta capire questo:
-
-- il modello prova;
-- sbaglia;
-- misura quanto sbaglia;
-- cambia un po';
-- riprova.
-
----
-
-== Errore
-
-L'errore misura la distanza tra:
-
-- risposta del modello;
-- risposta corretta.
-
-Esempio prezzo casa:
-
-- prezzo reale: 200.000 euro;
-- prezzo stimato: 180.000 euro;
-- errore: 20.000 euro.
-
-#alert[Addestrare significa cercare di ridurre gli errori.]
-
----
-
-== Funzione di perdita, detta semplice
-
-La funzione di perdita è un modo per dare un punteggio all'errore.
-
-Più il modello sbaglia, più la perdita è alta.
-
-Analogia:
-
-- è come il voto negativo di un esercizio;
-- il modello cerca di migliorare il voto;
-- l'obiettivo è ridurre la perdita.
-
----
-
-== Discesa del gradiente: analogia della collina
-
-Immaginate di essere su una collina nella nebbia.
-
-Volete arrivare nel punto più basso.
-
-Non vedete tutta la mappa.
-
-Potete solo sentire in che direzione il terreno scende.
-
-Fate piccoli passi verso il basso.
-
-#alert[Questa è l'idea intuitiva della discesa del gradiente.]
-
----
-
-== Piccoli passi
-
-Se il passo è troppo grande:
-
-- rischio di saltare il punto giusto;
-- posso andare avanti e indietro.
-
-Se il passo è troppo piccolo:
-
-- arrivo lentamente;
-- ci metto troppo tempo.
-
-Nel Machine Learning questo è collegato al learning rate.
-
----
-
-== Learning rate
-
-Il learning rate è la dimensione del passo durante l'apprendimento.
-
-- troppo alto: il modello è instabile;
-- troppo basso: il modello impara lentamente;
-- giusto: il modello migliora in modo regolare.
-
-#alert[Non serve la formula: pensate alla dimensione del passo in discesa.]
-
----
-
-== Addestramento come regolazione
-
-Un altro modo per vederlo:
-
-Il modello ha tante manopole.
-
-Dopo ogni errore, gira leggermente alcune manopole.
-
-Dopo moltissimi esempi, le manopole sono regolate meglio.
-
-#alert[Questo è particolarmente importante nel Deep Learning.]
-
----
-
-== Parte 6 — Overfitting e underfitting
-
-Due errori molto importanti:
-
-- underfitting: il modello è troppo semplice;
-- overfitting: il modello ha imparato troppo a memoria.
-
-Sono concetti fondamentali, ma si capiscono bene con esempi.
-
----
-
-== Underfitting
-
-Underfitting significa che il modello è troppo semplice per il problema.
-
-Esempio:
-
-- voglio prevedere prezzi delle case;
-- uso solo i metri quadrati;
-- ignoro zona, stato, piano, servizi, mercato.
-
-Risultato:
-
-- il modello sbaglia spesso;
-- non coglie aspetti importanti.
-
----
-
-== Analogia underfitting
-
-È come spiegare tutto con una sola regola.
-
-Esempio:
-
-“Tutte le case grandi costano tanto.”
-
-Ma:
-
-- una casa grande in cattivo stato può costare meno;
-- una casa piccola in centro può costare molto;
-- il contesto conta.
-
----
-
-== Overfitting
-
-Overfitting significa che il modello ha imparato troppo bene i dati di training.
-
-È bravo sugli esempi già visti.
-
-Ma va male su esempi nuovi.
-
-#alert[Ha memorizzato invece di generalizzare.]
-
----
-
-== Analogia overfitting
-
-Uno studente impara a memoria le risposte di 100 esercizi.
-
-Durante la verifica trova domande leggermente diverse.
-
-Non sa rispondere.
-
-Perché non ha capito il metodo.
-
-Ha solo memorizzato.
+#alert[Ci interessa la capacità di generalizzare.]
 
 ---
 
@@ -1179,1406 +516,1650 @@ Ha solo memorizzato.
 
 Generalizzare significa funzionare bene su casi nuovi.
 
-È lo scopo vero del Machine Learning.
-
-Non ci interessa un modello perfetto sui dati già visti.
-
-Ci interessa un modello utile nel mondo reale.
-
----
-
-== Come ridurre l'overfitting
-
-Possibili strategie:
-
-- usare più dati;
-- semplificare il modello;
-- usare validation/test set;
-- controllare gli errori;
-- evitare feature inutili;
-- fermare l'addestramento al momento giusto.
-
-#alert[La regola: non fidarsi solo del risultato sul training set.]
-
----
-
-== Parte 7 — Valutare un modello
-
-Dire “funziona bene” non basta.
-
-Dobbiamo misurare.
-
-Ma dobbiamo anche capire cosa stiamo misurando.
-
----
-
-== Accuratezza
-
-L'accuratezza dice quante risposte sono corrette sul totale.
-
 Esempio:
 
-- 100 email;
-- 90 classificate correttamente;
-- accuratezza 90%.
+- il modello ha visto email vecchie;
+- arriva una nuova email mai vista;
+- deve classificarla correttamente.
 
-Sembra semplice, ma può ingannare.
-
----
-
-== Quando l'accuratezza inganna
-
-Dataset:
-
-#raw(block: true, lang: "txt", "990 email normali\n10 email spam")
-
-Un modello che dice sempre “non spam” ha 99% di accuratezza.
-
-Ma non trova nemmeno una email spam.
-
-#alert[Un numero alto non significa sempre buon modello.]
+#alert[La generalizzazione è lo scopo vero del ML.]
 
 ---
 
-== Matrice di confusione
+== Underfitting
 
-Per la classificazione possiamo guardare:
+Underfitting significa che il modello è troppo semplice o ha imparato troppo poco.
 
-#raw(block: true, lang: "txt", "               Predetto sì   Predetto no\nReale sì       corretto      errore\nReale no       errore        corretto")
+Sintomi:
 
-Ci aiuta a capire che tipo di errori fa il modello.
+- sbaglia molto sul training;
+- sbaglia molto anche su validation/test;
+- non coglie la struttura dei dati.
 
----
+Metafora:
 
-== Errore falso positivo
-
-Falso positivo:
-
-Il modello segnala un problema, ma il problema non c'è.
-
-Esempi:
-
-- email normale segnata come spam;
-- transazione lecita segnalata come frode;
-- cliente normale indicato come a rischio.
-
-#alert[Può creare fastidio o costi inutili.]
+#alert[Studente che non ha studiato abbastanza.]
 
 ---
 
-== Errore falso negativo
+== Overfitting
 
-Falso negativo:
+Overfitting significa che il modello impara troppo bene il training set, compresi rumore ed errori.
 
-Il modello non segnala un problema che invece c'è.
+Sintomi:
 
-Esempi:
+- ottimo sul training;
+- scarso su dati nuovi.
 
-- email spam che passa;
-- guasto imminente non rilevato;
-- reclamo urgente classificato come normale;
-- frode non riconosciuta.
+Metafora:
 
-#alert[A volte è molto più grave del falso positivo.]
+#alert[Studente che ha memorizzato le risposte, ma non ha capito.]
 
 ---
 
-== Quale errore è peggiore?
+== Il punto giusto
 
-Dipende dal contesto.
+#raw(block: true, lang: "txt", "Modello troppo semplice → underfitting\nModello troppo complesso → overfitting\nModello giusto → generalizza bene")
 
-Filtro spam:
-
-- falso positivo: perdo una email importante;
-- falso negativo: ricevo spam.
-
-Diagnosi medica:
-
-- falso positivo: allarme inutile;
-- falso negativo: problema non diagnosticato.
-
-#alert[La valutazione è anche una scelta di rischio.]
+#alert[La bravura sta nel trovare il giusto equilibrio.]
 
 ---
 
-== Precision e recall, dette semplice
+== Underfitting e overfitting: esempio visivo
 
-Precision:
+#align(center)[
+#image("assets/image-5.png")]
 
-- quando il modello segnala qualcosa, quante volte ha ragione?
-
-Recall:
-
-- tra tutti i casi importanti, quanti ne riesce a trovare?
-
-Esempio:
-
-- meglio pochi allarmi ma molto precisi?
-- o meglio trovare quasi tutto, anche con qualche falso allarme?
+- linea troppo rigida: non segue i dati;
+- linea ragionevole: segue il trend;
+- linea troppo contorta: segue anche il rumore.
 
 ---
 
-== Metriche per regressione
+== Da dove arrivano i dataset?
 
-Per stimare numeri, guardiamo quanto siamo lontani dal valore reale.
+Fonti comuni:
 
-Esempi:
+- dati aziendali interni;
+- dataset pubblici;
+- università e ricerca;
+- Kaggle;
+- dati raccolti con sensori;
+- annotazioni manuali;
+- simulazioni.
 
-- errore medio sul prezzo;
-- errore medio sui giorni di ritardo;
-- differenza media tra vendite previste e reali.
-
-#alert[Anche qui conta il contesto: sbagliare di 1 euro o di 10.000 euro non è uguale.]
-
----
-
-== Parte 8 — Apprendimento supervisionato
-
-Apprendimento supervisionato:
-
-Abbiamo esempi con risposta corretta.
-
-Il modello impara a collegare input e output.
-
-Esempi:
-
-- email → spam/non spam;
-- casa → prezzo;
-- cliente → rischio abbandono;
-- immagine → categoria.
+#alert[Costruire un buon dataset può costare più del modello.]
 
 ---
 
-== Classificazione
+== Costruire un dataset da zero
 
-La classificazione assegna una categoria.
+È costoso perché bisogna:
 
-Esempi:
+- acquisire i dati;
+- salvarli correttamente;
+- pulirli;
+- etichettarli;
+- controllare errori;
+- gestire privacy;
+- aggiornare nel tempo;
+- documentare cosa significano.
 
-- reclamo / non reclamo;
-- urgente / non urgente;
-- spam / non spam;
-- cane / gatto;
-- difettoso / non difettoso;
-- rischio basso / medio / alto.
-
----
-
-== Classificazione: esempio simpatico
-
-Problema:
-
-#raw(block: true, lang: "txt", "Classificare messaggi WhatsApp del gruppo di condominio.")
-
-Categorie possibili:
-
-- informazione utile;
-- lamentela;
-- polemica inutile;
-- richiesta urgente;
-- messaggio fuori tema.
-
-#alert[Esempio leggero, ma il task è reale: classificare testi.]
+#alert[Il dataset è un prodotto, non un mucchio di file.]
 
 ---
 
-== Classificazione: esempio aziendale
+== Esempio: dataset per reclami
 
-Ticket assistenza:
+Vogliamo riconoscere reclami clienti.
 
-- tecnico;
-- amministrativo;
-- commerciale;
-- logistico;
+Serve raccogliere email e annotarle:
+
 - reclamo;
-- richiesta informazioni.
+- richiesta informativa;
+- sollecito;
+- problema tecnico;
+- richiesta commerciale.
 
-Il modello può aiutare a inoltrare il ticket al reparto corretto.
+Domanda difficile:
+
+#alert[Chi decide l’etichetta corretta?]
+
+---
+
+== Etichette rumorose
+
+Due persone possono classificare la stessa email in modo diverso.
+
+Esempio:
+
+- una persona vede un reclamo;
+- un’altra vede una richiesta urgente;
+- una terza vede un problema logistico.
+
+#alert[Se le etichette sono confuse, anche il modello impara confusione.]
+
+---
+
+== Un solo tipo di apprendimento?
+
+#image("assets/image-6.png")
+
+---
+== Un solo tipo di apprendimento? Pt.2
+
+#image("assets/image-7.png")
+
+--- 
+== Un solo algoritmo per ogni tipo di apprendimento?
+
+#align(center)[
+#image("assets/image-8.png")
+]
+
+---
+
+== Supervisionato, non supervisionato, rinforzo
+
+Tre grandi famiglie:
+
+- apprendimento supervisionato: esempi con risposta corretta;
+- apprendimento non supervisionato: dati senza etichette;
+- apprendimento per rinforzo: azioni, ambiente, ricompense.
+
+Aggiungiamo anche:
+
+- self-supervised learning.
+
+---
+
+== Apprendimento supervisionato
+
+Il modello riceve esempi già etichettati.
+
+Formato:
+
+#raw(block: true, lang: "txt", "input + risposta corretta")
+
+Esempi:
+
+- email + spam/non spam;
+- foto + cane/gatto;
+- casa + prezzo;
+- cliente + abbandona/non abbandona.
+
+---
+
+== Supervisionato: perché è comune
+
+È molto usato perché è facile misurare l’errore.
+
+Il modello risponde.
+
+Noi confrontiamo con la risposta corretta.
+
+Poi correggiamo.
+
+#alert[È come avere esercizi con soluzioni.]
+
+---
+
+== Apprendimento non supervisionato
+
+Il modello riceve dati senza etichette.
+
+Obiettivo:
+
+- trovare gruppi;
+- trovare somiglianze;
+- trovare anomalie;
+- scoprire strutture nascoste.
+
+Esempio:
+
+#alert[Clienti che si comportano in modo simile.]
+
+---
+
+== Non supervisionato: esempio negozio
+
+Un negozio online ha clienti molto diversi.
+
+Il clustering può trovare gruppi come:
+
+- clienti occasionali;
+- clienti fedeli;
+- clienti interessati agli sconti;
+- clienti premium;
+- clienti che abbandonano il carrello.
+
+Nessuno aveva scritto prima queste etichette.
+
+---
+
+== Apprendimento per rinforzo
+
+Il modello impara agendo in un ambiente.
+
+Riceve:
+
+- ricompense;
+- penalità;
+- feedback nel tempo.
+
+Esempi:
+
+- robot che cammina;
+- gioco;
+- gestione traffico;
+- agenti in simulazione.
+
+---
+
+== RL: metafora del cane
+
+Addestrare un cane:
+
+- azione corretta → premio;
+- azione sbagliata → nessun premio;
+- nel tempo impara la strategia.
+
+#alert[Il rinforzo non insegna una risposta singola, ma un comportamento.]
+
+---
+
+== Multi-agent reinforcement learning
+
+A volte non c’è un solo agente.
+
+Ci sono più agenti che interagiscono.
+
+Possibili scenari:
+
+- cooperativi: spegnere un incendio;
+- competitivi: nascondino;
+- misti: partita di calcio.
+
+#alert[Qui il comportamento degli altri cambia il problema.]
+
+---
+
+== Self-supervised learning
+
+Il modello crea da solo un compito a partire dai dati grezzi.
+
+Esempi:
+
+- maschero una parola e provo a predirla;
+- nascondo un pezzo di immagine e provo a ricostruirlo;
+- prendo due viste dello stesso oggetto e imparo che sono simili.
+
+#alert[È importantissimo per i modelli moderni.]
+
+---
+
+== Perché il self-supervised è potente?
+
+Perché permette di usare enormi quantità di dati non etichettati.
+
+Etichettare costa.
+
+I dati grezzi invece sono ovunque:
+
+- testi;
+- immagini;
+- video;
+- audio;
+- log;
+- codice.
+
+#alert[È uno dei motivi per cui il Deep Learning è esploso.]
+
+---
+
+== Tipi di task
+
+Oggi vediamo:
+
+- regressione;
+- classificazione;
+- clustering;
+- anomaly detection;
+- recommendation;
+- reinforcement learning.
+
+#alert[Non sono algoritmi, sono tipi di problemi.]
 
 ---
 
 == Regressione
 
-La regressione stima un numero.
+La regressione serve per prevedere un valore numerico continuo.
 
 Esempi:
 
-- prezzo;
-- quantità venduta;
-- giorni di ritardo;
-- tempo di lavorazione;
+- prezzo di una casa;
 - consumo energetico;
-- probabilità di abbandono.
+- ritardo in minuti;
+- fatturato previsto;
+- temperatura;
+- domanda di un prodotto.
 
 ---
 
-== Regressione: esempio simpatico
+== Regressione: esempio energia
 
-Prevedere il tempo di consegna della pizza.
+Immaginiamo un quartiere.
 
-Possibili feature:
+Quando la temperatura aumenta, aumenta anche il consumo elettrico per l’aria condizionata.
 
-- distanza;
-- giorno della settimana;
-- orario;
-- pioggia;
-- numero ordini;
-- traffico;
-- tipo di pizza.
+Domanda:
 
-Output:
-
-- minuti stimati.
+#alert[Possiamo stimare il consumo partendo dalla temperatura?]
 
 ---
 
-== Regressione: esempio aziendale
+== Regressione: il grafico
+#components.side-by-side(columns: (2fr, 1fr), gutter: 2em)[
+#align(center)[
+#image("assets/image-9.png")]
+][
+Ogni punto rappresenta un giorno.
 
-Prevedere vendite del prossimo mese.
+Asse orizzontale: temperatura.
 
-Possibili feature:
+Asse verticale: consumo elettrico.
 
-- vendite passate;
-- stagione;
-- promozioni;
-- prezzo;
-- disponibilità magazzino;
-- andamento mercato;
-- festività.
+Cerchiamo una relazione tra i due.
+]
+---
+
+== Una retta come modello semplice
+
+Possiamo usare un modello molto semplice:
+
+#raw(block: true, lang: "txt", "consumo = α × temperatura + β")
+
+Dove:
+
+- α dice quanto cresce il consumo quando cresce la temperatura;
+- β è il consumo base;
+- α e β sono parametri del modello.
+
+#align(center)[
+#image("assets/image-10.png")]
 
 ---
 
-== Parte 9 — Apprendimento non supervisionato
+== Che cosa significa α?
 
-Apprendimento non supervisionato:
+α è la pendenza della retta.
 
-Non abbiamo la risposta corretta.
+Se α è grande:
 
-Il modello cerca strutture nei dati.
+- il consumo cresce molto quando aumenta la temperatura.
+
+Se α è piccolo:
+
+- il consumo cresce poco.
+
+#alert[È una manopola che controlla l’inclinazione della retta.]
+
+---
+
+== Che cosa significa β?
+
+β è il punto di partenza della retta.
+
+Può rappresentare un consumo base:
+
+- luci;
+- computer;
+- frigoriferi;
+- macchinari sempre accesi.
+
+#alert[È la quota di consumo non spiegata solo dalla temperatura.]
+
+---
+
+== Previsione con la retta
+
+#raw(block: true, lang: "txt", "temperatura = 30°C\nα = 8\nβ = 20\n\nconsumo previsto = 8 × 30 + 20 = 260")
+
+Il modello prende un input e restituisce un valore previsto.
+
+---
+
+== Errore del modello
+
+Se il consumo reale era 250 e il modello prevede 260, l’errore è 10.
+
+#raw(block: true, lang: "txt", "errore = previsione - valore reale")
+
+Oppure, in modo intuitivo:
+
+#alert[Quanto siamo lontani dalla risposta corretta?]
+
+---
+
+== Tabella degli errori
+
+#image("assets/image-11.png")
+---
+
+== Perché sommare gli errori non basta?
+
+Se un errore è +10 e un altro è -10, la somma fa zero.
+
+Ma il modello ha sbagliato due volte.
+
+Per questo spesso consideriamo errori assoluti o errori al quadrato.
+
+#alert[Non serve la formula: serve capire che vogliamo misurare la distanza totale dalle risposte vere.]
+
+---
+
+== Loss come montagna
+
+Immaginiamo che ogni combinazione di parametri produca un certo errore.
+
+Alcune combinazioni stanno in alto: errore grande.
+
+Altre stanno in basso: errore piccolo.
+
+#alert[Addestrare = cercare il punto più basso.]
+
+---
+
+== Discesa del gradiente: metafora della nebbia
+
+Siamo su una montagna, c’è nebbia e vogliamo scendere a valle.
+
+Non vediamo tutta la montagna.
+
+Possiamo solo sentire dove il terreno scende vicino a noi.
+
+Facciamo un passo nella direzione più in discesa.
+
+Ripetiamo.
+
+---
+
+== Discesa del gradiente: sotto il cofano
+
+Nel ML facciamo qualcosa di simile:
+
+- partiamo da parametri casuali;
+- calcoliamo l’errore;
+- capiamo in che direzione modificare i parametri;
+- facciamo un piccolo passo;
+- ricalcoliamo l’errore;
+- ripetiamo molte volte.
+
+#align(center)[
+#image("assets/image-12.png")]
+
+---
+
+== Learning rate
+
+Il learning rate decide quanto grande è ogni passo.
+
+Passo troppo piccolo:
+
+- impariamo lentamente.
+
+Passo troppo grande:
+
+- rischiamo di saltare oltre il minimo.
+
+#alert[È come scendere una montagna: né lumaca né salto nel burrone.]
+
+---
+
+== Iterazioni
+
+Un’iterazione è un giro del processo:
+
+#raw(block: true, lang: "txt", "previsione → errore → correzione")
+
+Dopo molte iterazioni, la retta dovrebbe adattarsi meglio ai dati.
+
+#alert[Training significa ripetere questa correzione tante volte.]
+
+---
+
+== Visualizzazione della regressione
+
+#image("assets/image-13.png")
+---
+
+== Limiti della regressione lineare
+
+Una retta è semplice e interpretabile.
+
+Ma non va bene per tutto.
+
+Se il fenomeno è curvo, a soglie, stagionale o complesso, una retta può essere troppo povera.
+
+#alert[Modello semplice = facile da capire, ma non sempre abbastanza potente.]
+
+---
+
+== Esempi di regressione
+
+- stimare prezzo di una casa da metri quadri e zona;
+- prevedere incasso di un cinema dal giorno e dal film;
+- stimare tempo di consegna da distanza e traffico;
+- prevedere consumo elettrico da temperatura e presenze;
+- stimare vendite di gelati dalla temperatura.
+
+--- 
+
+== Link utili
+
+1. #link("https://mlu-explain.github.io/linear-regression/")
+2. #link("https://colab.research.google.com/drive/1Zd-1GnyKrhj2ifBVMoyt4VKt7oZzZocw?usp=sharing")
+---
+
+== Classificazione
+
+La classificazione serve per scegliere una categoria.
 
 Esempi:
 
-- gruppi di clienti;
-- argomenti ricorrenti nei reclami;
-- comportamenti anomali;
-- prodotti simili.
+- spam / non spam;
+- reclamo / richiesta normale;
+- cane / gatto;
+- benigno / maligno;
+- cliente fedele / cliente a rischio;
+- frode / transazione normale.
 
 ---
 
-== Clustering
+== Classificazione: non voglio un numero
 
-Il clustering raggruppa esempi simili.
+Nella regressione voglio un valore numerico.
 
-Non diciamo prima quali gruppi esistono.
+Nella classificazione voglio una classe.
 
-Il sistema prova a scoprirli.
-
-#alert[È utile per esplorare dati quando non sappiamo ancora cosa cercare.]
+#raw(block: true, lang: "txt", "Regressione: quanto consumerò domani?\nClassificazione: questa email è spam?")
 
 ---
 
-== Clustering: esempio supermercato
+== Classificazione: probabilità
 
-Clienti raggruppati per comportamento:
+Molti classificatori non danno solo una classe.
 
-- chi compra solo offerte;
-- chi compra biologico;
-- chi fa spese grandi nel weekend;
-- chi compra prodotti per bambini;
-- chi compra spesso ma poco.
-
-Questi gruppi possono aiutare marketing e logistica.
-
----
-
-== Clustering: esempio assistenza
-
-Abbiamo migliaia di ticket.
-
-Il clustering può far emergere gruppi come:
-
-- problemi di login;
-- fatture errate;
-- ritardi di consegna;
-- prodotto danneggiato;
-- richieste tecniche ricorrenti.
-
-#alert[A volte scopriamo problemi che non avevamo previsto.]
-
----
-
-== Anomaly detection
-
-Un task collegato è trovare anomalie.
-
-Esempi:
-
-- transazione bancaria strana;
-- consumo energetico anomalo;
-- macchina con comportamento insolito;
-- login da paese insolito;
-- ordine con quantità fuori scala.
-
-#alert[Non sempre sappiamo cosa sia l'anomalia prima di vederla.]
-
----
-
-== Parte 10 — Reinforcement Learning
-
-Il reinforcement learning è diverso.
-
-Un agente impara interagendo con un ambiente.
-
-Fa azioni.
-
-Riceve premi o penalità.
-
-Impara una strategia.
-
----
-
-== Analogia: videogame
-
-Un personaggio in un videogioco:
-
-- prova a muoversi;
-- perde punti se cade;
-- guadagna punti se raggiunge un obiettivo;
-- dopo molti tentativi impara una strategia migliore.
-
-#alert[Imparare per prove, errori e ricompense.]
-
----
-
-== Reinforcement Learning: esempi
-
-Possibili applicazioni:
-
-- giochi;
-- robotica;
-- controllo di droni;
-- ottimizzazione di percorsi;
-- gestione di risorse;
-- sistemi di raccomandazione avanzati;
-- controllo industriale.
-
-Non è il focus principale del corso, ma è utile conoscerne l'idea.
-
----
-
-== Esempio: robot magazzino
-
-Un robot deve muoversi in magazzino.
-
-Azioni:
-
-- avanti;
-- indietro;
-- gira;
-- raccogli pacco;
-- evita ostacolo.
-
-Premi:
-
-- arriva velocemente;
-- non urta;
-- consegna pacco corretto.
-
----
-
-== Parte 11 — Altri task utili
-
-Oltre alle categorie base, esistono task pratici molto comuni.
-
-- raccomandazione;
-- ranking;
-- previsione temporale;
-- estrazione di informazioni;
-- ricerca semantica;
-- riduzione dimensionale.
-
----
-
-== Sistemi di raccomandazione
-
-Raccomandare significa suggerire qualcosa.
-
-Esempi:
-
-- film;
-- prodotti;
-- canzoni;
-- articoli;
-- contatti;
-- corsi;
-- contenuti social.
-
-#alert[Molte piattaforme digitali vivono di raccomandazioni.]
-
----
-
-== Come ragiona una raccomandazione?
-
-Idea semplice:
-
-- persone simili hanno gusti simili;
-- prodotti comprati insieme possono essere collegati;
-- ciò che hai visto influenza ciò che ti verrà mostrato;
-- feedback come click, like e acquisti diventano dati.
-
----
-
-== Ranking
-
-Ranking significa ordinare risultati per importanza.
-
-Esempi:
-
-- risultati di un motore di ricerca;
-- candidati più adatti a una posizione;
-- ticket più urgenti;
-- prodotti più rilevanti;
-- documenti più vicini alla richiesta.
-
-#alert[Non basta trovare risultati: bisogna ordinarli bene.]
-
----
-
-== Previsione temporale
-
-Le serie temporali sono dati ordinati nel tempo.
-
-Esempi:
-
-- vendite giornaliere;
-- temperatura macchina;
-- accessi a un sito;
-- consumi energetici;
-- traffico;
-- domanda di prodotti.
-
-Obiettivo: capire andamento e prevedere il futuro.
-
----
-
-== Estrazione di informazioni
-
-Da un testo possiamo estrarre:
-
-- nomi;
-- date;
-- importi;
-- indirizzi;
-- codici;
-- scadenze;
-- responsabilità;
-- azioni da fare.
-
-Esempio: estrarre dati da fatture o email.
-
----
-
-== Parte 12 — Machine Learning classico
-
-Prima del Deep Learning, molti sistemi usavano modelli più semplici.
-
-Esempi:
-
-- regressione lineare;
-- alberi decisionali;
-- random forest;
-- k-nearest neighbors;
-- support vector machines;
-- naive Bayes.
-
-Non serve ricordare i nomi, ma capire il concetto.
-
----
-
-== Perché i modelli semplici sono importanti
-
-I modelli semplici spesso sono:
-
-- più veloci;
-- più economici;
-- più spiegabili;
-- più facili da controllare;
-- sufficienti per molti problemi aziendali.
-
-#alert[Non sempre serve il modello più grande.]
-
----
-
-== Esempio: albero vs rete neurale
-
-Per classificare ticket in 5 categorie:
-
-Un albero decisionale può bastare se:
-
-- i dati sono pochi;
-- le categorie sono chiare;
-- serve spiegabilità;
-- il rischio è basso.
-
-Una rete neurale può servire se:
-
-- il linguaggio è molto vario;
-- i dati sono tanti;
-- servono prestazioni più alte.
-
----
-
-== Spiegabilità
-
-Spiegabilità significa poter capire perché il modello ha dato una certa risposta.
-
-È importante quando:
-
-- c'è responsabilità legale;
-- ci sono decisioni su persone;
-- serve fiducia;
-- serve correggere errori;
-- il dominio è delicato.
-
-#alert[Un modello molto potente ma incomprensibile può essere un problema.]
-
----
-
-== Modelli interpretabili
-
-Alcuni modelli sono più facili da spiegare.
-
-Esempi:
-
-- regole;
-- alberi decisionali;
-- modelli lineari semplici.
+Danno una probabilità o un punteggio.
 
 Esempio:
 
-“Il ticket è urgente perché contiene parole di blocco, arriva da cliente premium e riguarda un servizio critico.”
+#raw(block: true, lang: "txt", "spam: 0.91\nnon spam: 0.09")
+
+Poi scegliamo una soglia.
+
+
+#image("assets/image-14.png")
 
 ---
 
-== Black box
+== Soglia di decisione
 
-Alcuni modelli sono difficili da interpretare.
+Se diciamo:
 
-Vediamo input e output, ma non è semplice capire il processo interno.
+#raw(block: true, lang: "txt", "se probabilità spam > 0.5 → spam")
 
-Esempi:
+stiamo usando una soglia.
 
-- grandi reti neurali;
-- modelli molto complessi;
-- sistemi con milioni o miliardi di parametri.
+Ma la soglia può cambiare.
 
-#alert[Più potenza può significare meno trasparenza.]
+#alert[In alcuni casi vogliamo essere più prudenti.]
 
 ---
 
-== Parte 13 — Perché passiamo al Deep Learning?
+== Esempio soglia: medicina
 
-Il Machine Learning classico funziona molto bene in tanti casi.
-
-Ma incontra difficoltà con dati molto complessi:
-
-- immagini;
-- audio;
-- video;
-- testo libero;
-- linguaggio naturale;
-- dati multimodali.
-
----
-
-== Il problema delle feature manuali
-
-Nel Machine Learning classico spesso dobbiamo scegliere noi le feature.
-
-Esempio immagine:
-
-- quali bordi?
-- quali forme?
-- quali colori?
-- quali parti dell'oggetto?
-
-Per problemi complessi, progettare feature a mano diventa difficile.
-
----
-
-== Deep Learning: idea semplice
-
-Il Deep Learning usa reti neurali con molti strati.
-
-Gli strati imparano rappresentazioni via via più complesse.
-
-Esempio immagine:
-
-- primi strati: bordi e colori;
-- strati intermedi: forme e parti;
-- strati finali: oggetti interi.
-
-#alert[Il modello impara molte feature automaticamente.]
-
----
-
-== Analogia: riconoscere un volto
-
-Quando riconosciamo una persona non guardiamo un solo dettaglio.
-
-Combiniamo:
-
-- occhi;
-- naso;
-- bocca;
-- forma del viso;
-- capelli;
-- espressione;
-- contesto.
-
-Una rete profonda combina molti livelli di segnali.
-
----
-
-== Rete neurale, spiegata semplice
-
-Una rete neurale è composta da tanti piccoli elementi collegati.
-
-Ogni elemento fa un calcolo semplice.
-
-Mettendone tantissimi insieme, il sistema può imparare funzioni complesse.
-
-#alert[Il singolo neurone è semplice; la rete nel complesso può essere potente.]
-
----
-
-== Strati
-
-Schema intuitivo:
-
-#raw(block: true, lang: "txt", "Input → Strato 1 → Strato 2 → Strato 3 → Output")
-
-Ogni strato trasforma un po' l'informazione.
-
-Più strati permettono trasformazioni più sofisticate.
-
----
-
-== Perché “deep”?
-
-“Deep” significa profondo.
-
-Non perché il modello capisca profondamente.
-
-Ma perché ha molti strati di elaborazione.
-
-#alert[Deep Learning = reti neurali con molti livelli.]
-
----
-
-== Perché è esploso negli ultimi anni?
-
-Il Deep Learning è cresciuto grazie a:
-
-- molti più dati;
-- GPU più potenti;
-- cloud computing;
-- dataset pubblici;
-- ricerca scientifica;
-- software open source;
-- aziende con grandi infrastrutture.
-
----
-
-== GPU
-
-Le GPU sono processori molto adatti a fare tanti calcoli in parallelo.
-
-Sono nate per la grafica.
-
-Poi si sono rivelate molto utili per addestrare reti neurali.
-
-#alert[Più calcolo disponibile = modelli più grandi e addestramenti più veloci.]
-
----
-
-== Deep Learning per immagini
-
-Applicazioni:
-
-- riconoscere oggetti;
-- diagnosi da immagini mediche;
-- controllo qualità in produzione;
-- guida assistita;
-- sorveglianza;
-- riconoscimento documenti.
-
----
-
-== Deep Learning per audio
-
-Applicazioni:
-
-- riconoscimento vocale;
-- trascrizione;
-- comandi vocali;
-- analisi di suoni industriali;
-- rilevamento anomalie acustiche;
-- sintesi vocale.
-
----
-
-== Deep Learning per testo
-
-Applicazioni:
-
-- classificazione testi;
-- traduzione;
-- riassunto;
-- ricerca semantica;
-- chatbot;
-- estrazione informazioni;
-- analisi del sentiment.
-
-#alert[Questa strada porterà poi agli LLM.]
-
----
-
-== Dal Deep Learning agli LLM
-
-Gli LLM sono modelli di Deep Learning specializzati nel linguaggio.
-
-Ma prima di arrivare lì è importante capire:
-
-- dati;
-- esempi;
-- modelli;
-- addestramento;
-- errore;
-- generalizzazione;
-- valutazione.
-
-#alert[Gli LLM sono una continuazione, non magia separata.]
-
----
-
-== Parte 14 — Problemi e limiti
-
-Il Machine Learning è potente, ma ha limiti importanti.
-
-Vediamo i principali:
-
-- dati insufficienti;
-- bias;
-- correlazione non causalità;
-- cambiamento nel tempo;
-- errori difficili da spiegare;
-- uso improprio.
-
----
-
-== Dati insufficienti
-
-Se abbiamo pochi esempi, il modello può non imparare bene.
+Se un test medico segnala una malattia grave, preferiamo forse avere più falsi allarmi ma meno casi persi.
 
 Esempio:
 
-- voglio riconoscere difetti rari;
-- ho solo 5 esempi di difetto;
-- il modello non vede abbastanza variabilità.
-
-#alert[Alcuni problemi richiedono molti dati.]
-
----
-
-== Bias
-
-Il bias può entrare nei dati e nei modelli.
-
-Esempi:
-
-- dati storici discriminatori;
-- gruppi sottorappresentati;
-- misurazioni incomplete;
-- categorie scelte male;
-- obiettivi aziendali distorti.
-
-#alert[Il modello può imparare ingiustizie presenti nel passato.]
-
----
-
-== Correlazione non significa causa
-
-Il modello può trovare relazioni statistiche.
-
-Ma non sempre sono cause reali.
-
-Esempio scherzoso:
-
-- quando si vendono più gelati, aumentano anche gli incidenti in piscina;
-- non significa che i gelati causino incidenti;
-- forse entrambi aumentano perché è estate.
-
----
-
-== Esempio aziendale: correlazione ingannevole
-
-Un modello scopre che clienti che chiamano spesso l'assistenza comprano meno.
-
-Possibili interpretazioni:
-
-- l'assistenza causa insoddisfazione;
-- i clienti chiamano perché sono già insoddisfatti;
-- il prodotto è difficile da usare;
-- i clienti più esigenti chiamano di più.
-
-#alert[Il modello segnala pattern; l'umano deve interpretarli.]
-
----
-
-== Data drift
-
-Data drift significa che i dati cambiano nel tempo.
-
-Esempi:
-
-- cambiano abitudini dei clienti;
-- cambia il mercato;
-- cambia il linguaggio;
-- cambia la normativa;
-- cambia il prodotto.
-
-Un modello addestrato ieri può peggiorare domani.
-
----
-
-== Concept drift
-
-Concept drift significa che cambia il significato del fenomeno.
-
-Esempio:
-
-Prima della pandemia, certi comportamenti d'acquisto avevano un significato.
-
-Durante la pandemia, gli stessi segnali potevano indicare altro.
-
-#alert[Il mondo cambia, quindi anche i modelli vanno aggiornati.]
-
----
-
-== Automazione cieca
-
-Un rischio è usare il modello senza controllo.
-
-Problemi:
-
-- fidarsi troppo;
-- non verificare;
-- delegare decisioni importanti;
-- non capire gli errori;
-- non sapere chi è responsabile.
-
-#alert[Il modello deve supportare la decisione, non sostituire sempre la persona.]
-
----
-
-== Human in the loop
-
-Human in the loop significa mantenere una persona nel processo.
-
-Esempi:
-
-- l'AI propone, l'operatore approva;
-- l'AI segnala anomalie, il tecnico verifica;
-- l'AI prepara una bozza, l'umano corregge;
-- l'AI classifica ticket, l'operatore può cambiare categoria.
-
----
-
-== Parte 15 — Casi pratici completi
-
-Ora mettiamo insieme i concetti con casi concreti.
-
-Vedremo:
-
-- classificare email;
-- prevedere ritardi;
-- raggruppare clienti;
-- manutenzione predittiva;
-- raccomandazioni;
-- controllo qualità.
-
----
-
-== Caso 1 — Classificare email
-
-Obiettivo:
-
-- classificare email in categorie.
-
-Categorie:
-
-- reclamo;
-- richiesta informazioni;
-- amministrazione;
-- tecnico;
-- commerciale.
-
-Utilità:
-
-- smistamento automatico;
-- priorità;
-- risparmio di tempo;
-- meno errori di inoltro.
-
----
-
-== Caso 1 — Dati necessari
-
-Servono:
-
-- storico email;
-- categoria corretta;
-- eventuale priorità;
-- reparto che ha risposto;
-- tempi di risposta;
-- esito finale.
-
-Attenzione:
-
-- privacy;
-- dati personali;
-- informazioni riservate.
-
----
-
-== Caso 1 — Possibile workflow
-
-#raw(block: true, lang: "txt", "Email storiche\n→ pulizia e anonimizzazione\n→ etichette corrette\n→ addestramento modello\n→ valutazione errori\n→ uso su nuove email\n→ controllo umano")
-
----
-
-== Caso 2 — Prevedere ritardi di consegna
-
-Obiettivo:
-
-- stimare se una consegna arriverà in ritardo.
-
-Feature possibili:
-
-- distanza;
-- corriere;
-- zona;
-- giorno della settimana;
-- periodo dell'anno;
-- tipo prodotto;
-- storico ritardi;
-- traffico o meteo, se disponibili.
-
----
-
-== Caso 2 — Valore aziendale
-
-Se prevedo un ritardo, posso:
-
-- avvisare prima il cliente;
-- cambiare corriere;
-- dare priorità alla spedizione;
-- organizzare meglio il magazzino;
-- ridurre reclami;
-- migliorare la fiducia.
-
-#alert[La previsione diventa utile solo se porta a un'azione.]
-
----
-
-== Caso 3 — Raggruppare clienti
-
-Obiettivo:
-
-- scoprire gruppi di clienti simili.
-
-Dati:
-
-- frequenza acquisti;
-- spesa media;
-- categorie acquistate;
-- canale preferito;
-- reclami;
-- risposta alle promozioni.
-
-Task:
-
-- clustering.
-
----
-
-== Caso 3 — Possibili gruppi
-
-Il sistema potrebbe trovare:
-
-- clienti fedeli ad alto valore;
-- clienti occasionali;
-- clienti sensibili al prezzo;
-- clienti insoddisfatti;
-- clienti tecnici;
-- clienti che comprano solo certi prodotti.
-
-#alert[Il nome dei gruppi lo dà l'umano interpretando i risultati.]
-
----
-
-== Caso 4 — Manutenzione predittiva
-
-Obiettivo:
-
-- prevedere guasti prima che accadano.
-
-Dati:
-
-- sensori;
-- log macchina;
-- temperature;
-- vibrazioni;
-- consumi;
-- storico guasti;
-- interventi manutenzione.
-
----
-
-== Caso 4 — Perché è utile
-
-Benefici:
-
-- meno fermi macchina;
-- meno costi imprevisti;
-- migliore pianificazione;
-- più sicurezza;
-- maggiore durata degli impianti.
-
-Rischio:
-
-- falsi allarmi;
-- guasti non previsti;
-- dati sensore sbagliati.
-
----
-
-== Caso 5 — Raccomandazioni
-
-Obiettivo:
-
-- suggerire prodotti o contenuti.
-
-Dati:
-
-- acquisti passati;
-- prodotti visualizzati;
-- carrelli abbandonati;
-- recensioni;
-- clienti simili;
-- prodotti comprati insieme.
-
----
-
-== Caso 5 — Effetto collaterale
-
-Le raccomandazioni possono essere utili, ma anche creare:
-
-- bolle informative;
-- dipendenza da piattaforme;
-- promozione di contenuti estremi;
-- riduzione della varietà;
-- manipolazione dell'attenzione.
-
-#alert[Un algoritmo di ranking influenza ciò che vediamo.]
-
----
-
-== Caso 6 — Controllo qualità
-
-Obiettivo:
-
-- riconoscere prodotti difettosi da immagini o misurazioni.
-
-Esempi:
-
-- graffi;
-- crepe;
-- parti mancanti;
-- misure fuori tolleranza;
-- confezioni danneggiate.
-
-Task:
-
-- classificazione o anomaly detection.
-
----
-
-== Parte 16 — Attività in aula
-
-Le prossime slide sono esercizi discussi insieme.
-
-Non serve programmare.
-
-Serve ragionare come se dovessimo progettare un sistema ML.
-
----
-
-== Esercizio 1 — Che tipo di task è?
-
-Classificate questi problemi:
-
-- prevedere il fatturato del mese prossimo;
-- riconoscere email spam;
-- raggruppare reclami simili;
-- suggerire prodotti;
-- stimare giorni di ritardo;
-- trovare transazioni anomale;
-- insegnare a un robot a muoversi.
-
----
-
-== Esercizio 2 — Quali dati servono?
-
-Problema:
-
-Vogliamo prevedere se un cliente abbandonerà il servizio.
-
-Domande:
-
-- quali dati usereste?
-- quali potrebbero essere inutili?
-- quali potrebbero essere rischiosi per la privacy?
-- quale sarebbe l'etichetta corretta?
-
----
-
-== Esercizio 3 — Feature per ritardi
-
-Problema:
-
-Prevedere se una consegna arriverà in ritardo.
-
-Trovate almeno 10 feature possibili.
-
-Poi discutiamo:
-
-- quali sono facili da ottenere?
-- quali sono affidabili?
-- quali sono troppo costose?
-- quali potrebbero essere fuorvianti?
-
----
-
-== Esercizio 4 — Errori accettabili
-
-Per ogni caso, quale errore è peggiore?
-
-- spam filter;
-- diagnosi medica;
-- frode bancaria;
-- ticket urgente;
-- manutenzione predittiva;
-- raccomandazione film.
+- falso positivo: persona sana segnalata come a rischio;
+- falso negativo: persona malata segnalata come sana.
 
 #alert[Non tutti gli errori hanno lo stesso costo.]
 
 ---
 
-== Esercizio 5 — Overfitting
+== Decision tree
 
-Scenario:
+Un decision tree funziona come una serie di domande.
 
-Un modello riconosce perfettamente 100 immagini di addestramento.
+Ogni nodo è una domanda.
 
-Ma sbaglia moltissimo su immagini nuove.
+Ogni ramo è una risposta.
+
+Ogni foglia è una decisione.
+
+#alert[È uno dei modelli più facili da spiegare.]
+
+---
+
+== Decision tree: frutta
+
+#raw(block: true, lang: "txt", "È gialla?\n├─ sì → è lunga?\n│  ├─ sì → banana\n│  └─ no → limone\n└─ no → è rossa?\n   ├─ sì → mela\n   └─ no → altra frutta")
+
+---
+
+== Decision tree: giocare o no
+
+#image("assets/image-15.png")
+
+---
+
+== Come si addestra un albero?
+
+L’albero sceglie domande che separano bene i dati.
+
+Esempio frutta:
+
+- colore separa banane e mele?
+- forma separa banane e limoni?
+- peso aiuta?
+
+#alert[Ogni domanda dovrebbe rendere i gruppi più ordinati.]
+
+---
+
+== Albero troppo profondo
+
+Un albero può diventare troppo specifico.
+
+Esempio:
+
+- se colore = rosso;
+- e peso = 173 grammi;
+- e giorno = martedì;
+- e produttore = X;
+- allora mela.
+
+#alert[Se l’albero impara dettagli inutili, rischia overfitting.]
+
+---
+
+== Random Forest
+
+Una Random Forest usa tanti alberi.
+
+Ogni albero vota.
+
+La decisione finale è il voto aggregato.
+
+Metafora:
+
+#alert[Non chiedo a un solo esperto: chiedo a una commissione.]
+
+#align(center)[
+#image("assets/image-16.png")]
+
+---
+
+== Random Forest: perché funziona meglio?
+
+Un singolo albero può sbagliare per caso.
+
+Tanti alberi diversi, messi insieme, sono spesso più robusti.
+
+Vantaggio:
+
+- buone prestazioni;
+- abbastanza robusta;
+- spesso funziona bene su dati tabellari.
+
+Svantaggio:
+
+- meno interpretabile di un singolo albero.
+
+---
+
+== K-Nearest Neighbors
+
+KNN classifica guardando gli esempi più vicini.
+
+Idea:
+
+- ho un nuovo punto;
+- guardo i K punti più vicini;
+- la classe più frequente vince.
+
+#alert[È ragionamento per somiglianza.]
+
+---
+
+== KNN: esempio
+
+Se un nuovo cliente assomiglia molto a clienti che in passato hanno abbandonato, potrebbe essere a rischio.
+
+Se una nuova email assomiglia a email spam, potrebbe essere spam.
+
+#alert[Il concetto di distanza è fondamentale.]
+
+#image("assets/image-17.png")
+
+---
+
+== KNN: dettaglio importante
+
+KNN non viene addestrato come altri modelli.
+
+Memorizza il dataset.
+
+Quando arriva un nuovo caso, lo confronta con gli esempi salvati.
+
+Pro:
+
+- semplice.
+
+Contro:
+
+- lento su dataset grandi.
+
+---
+
+== SVM
+
+Support Vector Machine cerca un confine che separi bene le classi.
+
+Idea intuitiva:
+
+- non basta separare;
+- vogliamo separare con il margine più ampio possibile.
+
+#alert[Come disegnare una linea lasciando spazio di sicurezza da entrambe le parti.]
+
+---
+
+== SVM: support vectors
+
+I punti più vicini al confine sono i più importanti.
+
+Si chiamano support vectors.
+
+Sono quelli che “sostengono” la decisione del modello.
+
+#alert[Non tutti i punti contano allo stesso modo.]
+
+#align(center)[
+#image("assets/image-18.png")]
+
+---
+
+== Classificazione: come la valutiamo?
+
+Prima idea: accuratezza.
+
+#raw(block: true, lang: "txt", "accuratezza = esempi classificati bene / esempi totali")
+
+Esempio:
+
+- 100 immagini;
+- 90 corrette;
+- accuratezza = 90%.
+
+---
+
+== Il problema dell’accuratezza
+
+Immaginiamo 1000 email:
+
+- 990 normali;
+- 10 spam.
+
+Un modello stupido dice sempre “normale”.
+
+Risultato:
+
+#raw(block: true, lang: "txt", "990 corrette su 1000 = 99% accuratezza")
+
+#alert[Sembra ottimo, ma non trova neanche uno spam.]
+
+---
+
+== Classi sbilanciate
+
+Le classi sono sbilanciate quando una è molto più frequente dell’altra.
+
+Esempi:
+
+- frodi bancarie: poche rispetto alle transazioni normali;
+- malattie rare: pochi casi positivi;
+- guasti macchina: pochi eventi rispetto al funzionamento normale.
+
+#alert[In questi casi l’accuratezza può ingannare.]
+
+---
+
+== Matrice di confusione
+
+La matrice di confusione mostra cosa abbiamo previsto bene e male.
+
+Per due classi:
+
+- veri positivi;
+- veri negativi;
+- falsi positivi;
+- falsi negativi.
+
+#alert[Serve per capire il tipo di errore.]
+
+---
+
+== Matrice di confusione: esempio
+
+#raw(block: true, lang: "txt", "                 previsto spam | previsto normale\nreale spam            8        |       2\nreale normale         5        |      985")
+
+Domanda:
+
+#alert[Quale errore è più grave nel nostro caso?]
+
+---
+
+== Precisione e richiamo, senza formule
+
+Precisione:
+
+- quando il modello segnala positivo, quanto spesso ha ragione?
+
+Richiamo:
+
+- tra tutti i positivi reali, quanti ne trova?
+
+#alert[Precisione = pochi falsi allarmi. Richiamo = pochi casi persi.]
+
+---
+
+== Esempio: filtro spam
+
+Alta precisione:
+
+- se metto una email nello spam, quasi sicuramente è spam.
+
+Alto richiamo:
+
+- riesco a catturare quasi tutto lo spam.
+
+Trade-off:
+
+#alert[Se sono troppo aggressivo rischio di buttare email importanti nello spam.]
+
+---
+
+== Gestire classi sbilanciate
+
+Possibili strategie:
+
+- raccogliere più dati della classe rara;
+- togliere esempi dalla classe dominante;
+- creare esempi sintetici;
+- cambiare soglie;
+- usare metriche più adatte;
+- pesare di più gli errori importanti.
+
+---
+
+== Oversampling con immagini
+
+Con immagini possiamo creare varianti:
+
+- ruotare leggermente;
+- specchiare;
+- cambiare luminosità;
+- ritagliare;
+- aggiungere rumore.
+
+#alert[Attenzione: creare dati non significa inventare verità.]
+
+---
+
+== Regressione vs classificazione
+
+#raw(block: true, lang: "txt", "Regressione\n- output numerico\n- esempio: prezzo, consumo, ritardo\n\nClassificazione\n- output categoria\n- esempio: spam, cane/gatto, rischio alto/basso")
+
+#align(center)[
+#image("assets/image-19.png")]
+
+---
+
+== Link utili 
+
+1. #link("https://colab.research.google.com/drive/1pRvH1DbcQDPLhfE_296ykI9vAqGg-Plw?usp=sharing")
+
+
+---
+
+== Clustering
+
+Il clustering raggruppa oggetti simili.
+
+Non abbiamo etichette corrette.
+
+Il modello prova a trovare gruppi naturali.
+
+Esempi:
+
+- segmentazione clienti;
+- gruppi di reclami;
+- anomalie;
+- documenti simili.
+
+#image("assets/image-20.png")
+
+---
+
+== Clustering: esempio supermercato
+
+Dati sugli acquisti:
+
+- alcuni clienti comprano prodotti premium;
+- altri cercano offerte;
+- altri comprano solo online;
+- altri comprano spesso pochi prodotti.
+
+#alert[Il clustering può scoprire gruppi utili per marketing e servizio clienti.]
+
+---
+
+== K-means
+K-means divide i dati in K gruppi.
+
+#components.side-by-side(columns: (1fr, 3fr), gutter: 2em)[
+
+Passi intuitivi:
+
+1. scegli K;
+2. scegli K centri iniziali;
+3. assegna ogni punto al centro più vicino;
+4. sposta i centri al cuore dei gruppi;
+5. ripeti finché si stabilizza.
+][
+#image("assets/image-21.png")
+]
+---
+
+== K-means: il centroide
+
+Il centroide è il centro del gruppo.
+
+Metafora:
+
+- ogni gruppo ha un “baricentro”;
+- i punti vanno con il baricentro più vicino;
+- poi il baricentro si sposta.
+
+#alert[K è un iperparametro: lo scegliamo noi.]
+
+---
+
+== Problema: scegliere K
+
+Se K è troppo basso:
+
+- gruppi troppo generici.
+
+Se K è troppo alto:
+
+- gruppi troppo frammentati.
+
+Esempio:
+
+#alert[Dividere tutti i clienti in 2 gruppi può essere poco utile; dividerli in 1000 gruppi può essere ingestibile.]
+
+#align(center)[
+#image("assets/image-22.png")]
+
+---
+
+== Anomaly detection
+
+Anomaly detection cerca casi strani o insoliti.
+
+Esempi:
+
+- transazione bancaria sospetta;
+- macchina con vibrazioni anomale;
+- accesso informatico strano;
+- ordine con quantità fuori scala;
+- consumo energetico improvvisamente alto.
+
+---
+
+== Raccomandazioni
+
+I sistemi di raccomandazione suggeriscono contenuti o prodotti.
+
+Esempi:
+
+- film su Netflix;
+- prodotti su Amazon;
+- video su YouTube;
+- canzoni su Spotify;
+- contatti su LinkedIn.
+
+#alert[Spesso combinano somiglianze tra utenti, prodotti e comportamenti.]
+
+---
+
+== Raccomandazioni: idea semplice
+
+Se utenti simili a te hanno apprezzato un film, forse piacerà anche a te.
+
+Se hai comprato certi prodotti, potresti essere interessato a prodotti simili.
+
+#alert[Il comportamento passato diventa suggerimento futuro.]
+
+---
+
+== Reinforcement learning: più sotto il cofano
+
+#components.side-by-side(columns: (1fr, 1fr), gutter: 2em)[
+Elementi principali:
+
+- agente: chi decide;
+- ambiente: il mondo in cui agisce;
+- stato: situazione attuale;
+- azione: scelta possibile;
+- ricompensa: feedback;
+- policy: strategia di comportamento.
+][
+#image("assets/image-23.png")]
+---
+
+== RL: esempio videogioco
+
+Agente:
+
+- il personaggio.
+
+Ambiente:
+
+- il livello di gioco.
+
+Azioni:
+
+- muoversi, saltare, sparare.
+
+Ricompensa:
+
+- punti, sopravvivenza, obiettivo raggiunto.
+
+#alert[Il modello impara provando strategie.]
+
+---
+
+== RL: perché è difficile
+
+Il problema è che una buona decisione oggi può dare ricompensa solo più avanti.
+
+Esempio:
+
+- nel calcio, un passaggio utile non è subito un goal;
+- in robotica, un movimento sbagliato può far cadere il robot dopo qualche secondo.
+
+#alert[Bisogna collegare azioni presenti a effetti futuri.]
+
+---
+
+== RL: cosa impariamo?
+
+#align(center)[
+#image("assets/image-24.png")]
+
+
+---
+
+== Modelli semplici: pro e contro
+
+Pro:
+
+- più facili da spiegare;
+- richiedono meno dati;
+- spesso sufficienti;
+- più veloci.
+
+Contro:
+
+- non gestiscono bene immagini, audio, testo complesso;
+- possono non cogliere pattern complicati;
+- dipendono molto dalle feature scelte a mano.
+
+---
+
+== Feature engineering
+
+Prima del Deep Learning, spesso serviva costruire manualmente le feature.
+
+Esempio immagini:
+
+- bordi;
+- angoli;
+- colori;
+- forme.
+
+Esempio testo:
+
+- parole frequenti;
+- lunghezza;
+- punteggiatura;
+- presenza di termini specifici.
+
+#alert[Il lavoro umano stava molto nella scelta delle feature.]
+
+---
+
+== Perché passare al Deep Learning?
+
+Perché alcuni dati sono troppo complessi per feature manuali semplici.
+
+Esempi:
+
+- immagini;
+- audio;
+- video;
+- linguaggio naturale;
+- dati multimodali.
+
+#alert[Il Deep Learning prova a imparare anche le feature.]
+
+---
+
+== Rete neurale: idea intuitiva
+
+Una rete neurale è composta da tanti piccoli elementi collegati.
+
+Ogni elemento fa una trasformazione semplice.
+
+Messi insieme, possono imparare trasformazioni complesse.
+
+#alert[Molte operazioni semplici combinate producono comportamento complesso.]
+
+---
+
+== Neurone artificiale
+
+Un neurone artificiale prende numeri in input, li pesa e produce un output.
+
+Idea:
+
+#raw(block: true, lang: "txt", "input → pesi → somma → attivazione → output")
+
+I pesi sono parametri appresi durante il training.
+
+#align(center)[
+#image("assets/image-25.png")]
+
+---
+
+== Pesi
+
+Un peso dice quanto conta un input.
+
+Esempio email spam:
+
+- presenza di molti link: peso alto;
+- parola “riunione”: peso basso o negativo;
+- mittente sconosciuto: peso medio.
+
+#alert[Il modello impara quali segnali sono importanti.]
+
+---
+
+== Strati
+
+Le reti neurali hanno strati.
+
+- input layer: riceve i dati;
+- hidden layers: trasformano l’informazione;
+- output layer: produce la risposta.
+
+#alert[Deep = molti strati.]
+#align(center)[
+#image("assets/image-26.png")]
+
+---
+
+== Deep Learning: rappresentazioni successive
+
+In una rete per immagini:
+
+- primi strati: bordi e colori;
+- strati intermedi: forme;
+- strati alti: parti di oggetti;
+- output: categoria finale.
+
+#alert[Il modello costruisce rappresentazioni sempre più astratte.]
+
+---
+
+== Esempio: riconoscere un gatto
+
+Il modello non parte sapendo cos’è un gatto.
+
+Impara pattern come:
+
+- bordi;
+- texture;
+- occhi;
+- orecchie;
+- muso;
+- combinazioni di parti.
+
+#alert[Non gli diciamo noi ogni regola.]
+
+---
+
+== Deep Learning e dati
+
+Le reti profonde spesso richiedono:
+
+- molti dati;
+- molta potenza di calcolo;
+- tempo di addestramento;
+- attenzione a overfitting e bias.
+
+#alert[Più potenza non significa automaticamente migliore.]
+
+---
+
+== Deep Learning e GPU
+
+Le GPU sono processori adatti a fare tante operazioni simili in parallelo.
+
+Sono utili perché il Deep Learning richiede moltissimi calcoli numerici.
+
+#alert[È uno dei motivi tecnici dell’esplosione recente dell’AI.]
+
+---
+
+== Perché proprio negli ultimi anni?
+
+- più dati disponibili;
+- più potenza di calcolo;
+- GPU e cloud;
+- algoritmi migliori;
+- librerie software mature;
+- investimenti enormi;
+- applicazioni commerciali evidenti.
+
+---
+
+== Deep Learning non sostituisce tutto
+
+Su dati tabellari aziendali, modelli più semplici possono ancora funzionare benissimo.
+
+Esempi:
+
+- Random Forest;
+- Gradient Boosting;
+- regressione;
+- alberi decisionali.
+
+#alert[Non sempre il modello più complesso è il migliore.]
+
+---
+
+== Interpretabilità
+
+Un modello interpretabile permette di capire perché ha preso una decisione.
+
+Più il modello è complesso, più può diventare una scatola nera.
+
+Esempio:
+
+- albero decisionale: abbastanza spiegabile;
+- rete neurale profonda: più difficile da spiegare.
+
+---
+
+== Black box
+
+Una black box è un sistema che produce output senza rendere facilmente comprensibile il processo interno.
+
+Problema:
+
+- può essere accurato;
+- ma difficile da giustificare;
+- difficile da controllare;
+- delicato in ambiti ad alto rischio.
+
+#alert[Accuratezza e spiegabilità sono entrambe importanti.]
+
+---
+
+== Trade-off pratico
+
+#raw(block: true, lang: "txt", "Modello semplice\n+ interpretabile\n+ veloce\n- meno potente su dati complessi\n\nModello complesso\n+ potente\n+ adatto a immagini/testo/audio\n- più difficile da spiegare\n- richiede più dati e calcolo")
+
+---
+
+== Rilascio del modello
+
+Addestrare non basta.
+
+Bisogna integrarlo in un’applicazione o processo.
+
+Esempi:
+
+- filtro spam nella mail;
+- modello antifrode nel pagamento;
+- previsione consumo in dashboard;
+- classificatore reclami in CRM.
+
+---
+
+== Monitoraggio
+
+Un modello può peggiorare nel tempo.
+
+Perché?
+
+- cambiano i clienti;
+- cambiano i prodotti;
+- cambia il linguaggio;
+- cambiano le frodi;
+- cambiano le condizioni del mercato.
+
+#alert[Un modello non è “finito per sempre”.]
+
+---
+
+== Data drift
+
+Data drift significa che i dati nuovi sono diversi dai dati usati in addestramento.
+
+Esempio:
+
+- modello addestrato prima della pandemia;
+- comportamento clienti cambia radicalmente;
+- il modello continua a usare vecchi pattern.
+
+#alert[Se il mondo cambia, il modello può diventare vecchio.]
+
+---
+
+== Concept drift
+
+Concept drift significa che cambia la relazione tra input e output.
+
+Esempio spam:
+
+- gli spammer cambiano linguaggio;
+- parole prima sospette diventano normali;
+- nuovi trucchi aggirano il filtro.
+
+#alert[Il concetto da imparare si sposta.]
+
+---
+
+== Human in the loop
+
+In molti casi la persona resta nel ciclo.
+
+Il modello suggerisce.
+
+La persona controlla.
+
+La decisione finale resta umana.
+
+Esempi:
+
+- sanità;
+- credito;
+- selezione personale;
+- documenti ufficiali;
+- sicurezza.
+
+---
+
+== Errore accettabile
+
+Prima di usare ML bisogna chiedersi:
+
+- quanto costa un falso positivo?
+- quanto costa un falso negativo?
+- chi controlla l’output?
+- il modello può spiegarsi?
+- cosa succede se sbaglia?
+
+#alert[Non tutti gli errori sono uguali.]
+
+---
+
+== Bias: richiamo
+
+Un modello può imparare distorsioni presenti nei dati.
+
+Esempio:
+
+- dati storici discriminatori;
+- etichette prodotte da persone con pregiudizi;
+- gruppi poco rappresentati;
+- feature che nascondono informazioni sensibili.
+
+#alert[Il ML può automatizzare ingiustizie.]
+
+---
+
+== Bias: esempio prestiti
+
+Se uno storico prestiti penalizza alcune zone geografiche, il modello può imparare che quella zona è un segnale negativo.
+
+Problema:
+
+- magari non valuta davvero la solvibilità individuale;
+- usa una scorciatoia statistica;
+- produce decisioni ingiuste.
+
+#alert[Correlazione non significa causalità.]
+
+---
+
+== Correlazione e causalità
+
+Correlazione:
+
+- due cose si muovono insieme.
+
+Causalità:
+
+- una cosa causa l’altra.
+
+Esempio scherzoso:
+
+- aumentano le vendite di gelati;
+- aumentano gli incidenti in piscina.
+
+La causa comune potrebbe essere il caldo.
+
+---
+
+== Leakage
+
+Data leakage significa che durante l’addestramento il modello vede informazioni che non avrebbe nel mondo reale.
+
+Esempio:
+
+- voglio prevedere se un cliente abbandonerà;
+- nel dataset includo una colonna “data cancellazione contratto”;
+- il modello sembra bravissimo, ma sta barando.
+
+#alert[Prestazioni troppo belle possono nascondere errori metodologici.]
+
+---
+
+== Feature inutili ma pericolose
+
+Un modello può usare scorciatoie.
+
+Esempio immagini:
+
+- modello riconosce cani e lupi;
+- ma impara che “neve” significa lupo;
+- non ha davvero imparato il lupo.
+
+#alert[Il modello può imparare il segnale sbagliato.]
+
+---
+
+== Demo mentale: spam
+
+Domanda:
+
+Se addestriamo un filtro spam solo su email vecchie, cosa succede quando gli spammer cambiano stile?
+
+Possibili problemi:
+
+- peggioramento;
+- falsi negativi;
+- nuove parole non viste;
+- necessità di riaddestrare.
+
+---
+
+== Demo mentale: recensioni false
+
+Un modello deve riconoscere recensioni false.
+
+Feature possibili:
+
+- lunghezza;
+- ripetizione di parole;
+- account nuovo;
+- orario di pubblicazione;
+- somiglianza con altre recensioni.
+
+#alert[Ma chi scrive recensioni false può adattarsi.]
+
+---
+
+== Cosa significa “il modello ha imparato”?
+
+Non significa che ha capito come una persona.
+
+Significa che ha trovato parametri che riducono l’errore sui dati di addestramento e, speriamo, funzionano su dati nuovi.
+
+#alert[Imparare, nel ML, è una definizione operativa.]
+
+---
+
+== Il modello non conosce il contesto aziendale
+
+Il modello vede pattern.
+
+Non conosce automaticamente:
+
+- policy interne;
+- eccezioni operative;
+- relazioni personali;
+- obiettivi strategici;
+- responsabilità legali.
+
+#alert[Serve sempre il contesto umano.]
+
+---
+
+== Checklist: buon problema ML
+
+- esiste un obiettivo chiaro?
+- abbiamo dati rilevanti?
+- abbiamo esempi corretti?
+- possiamo misurare l’errore?
+- l’errore è accettabile?
+- possiamo controllare il risultato?
+- il modello crea valore?
+
+---
+
+== Checklist: red flag
+
+- dati troppo pochi;
+- dati non rappresentativi;
+- obiettivo confuso;
+- metriche sbagliate;
+- classi sbilanciate ignorate;
+- privacy non gestita;
+- output non verificabile;
+- responsabilità non chiara.
+
+---
+
+== Mini-attività 1
+
+Per ciascun caso, dite se è regressione, classificazione, clustering o RL:
+
+- prevedere il consumo elettrico;
+- dividere clienti in gruppi;
+- decidere se una email è spam;
+- far imparare a un robot a camminare;
+- stimare il prezzo di una casa;
+- riconoscere transazioni sospette.
+
+---
+
+== Mini-attività 2
+
+Pensate a un processo aziendale.
 
 Domande:
 
-- cosa potrebbe essere successo?
-- cosa possiamo fare?
-- perché il risultato iniziale era ingannevole?
+- quali dati produce?
+- quale output vorremmo prevedere?
+- avremmo etichette?
+- quale errore sarebbe grave?
+- chi dovrebbe verificare il modello?
 
 ---
 
-== Esercizio 6 — Bias
+== Mini-attività 3
 
-Scenario:
+Caso: sistema per dare priorità ai ticket.
 
-Un modello di selezione CV è addestrato su assunzioni passate.
+Decidiamo:
 
-In passato l'azienda ha assunto soprattutto uomini in ruoli tecnici.
+- feature possibili;
+- target;
+- training set;
+- metrica;
+- rischi;
+- controllo umano.
+
+---
+
+== Mini-attività 4
+
+Caso: prevedere clienti a rischio.
 
 Domande:
 
-- cosa può imparare il modello?
-- perché è un problema?
-- come possiamo controllarlo?
+- quali dati servono?
+- cosa significa “a rischio”?
+- dopo quanto tempo misuriamo se avevamo ragione?
+- quali azioni facciamo sui clienti segnalati?
+
+#alert[Un modello deve collegarsi a un’azione concreta.]
 
 ---
 
-== Esercizio 7 — Modello utile o no?
-
-Un'azienda vuole usare AI per decidere automaticamente licenziamenti.
-
-Discutiamo:
-
-- è un buon caso d'uso?
-- quali rischi ci sono?
-- quali dati servirebbero?
-- chi sarebbe responsabile?
-- è accettabile automatizzare completamente?
-
----
-
-== Esercizio 8 — Disegnare il workflow
-
-Scegliete un problema:
-
-- classificare ticket;
-- prevedere vendite;
-- suggerire prodotti;
-- trovare guasti;
-- raggruppare clienti.
-
-Disegnate:
-
-- dati di input;
-- modello;
-- output;
-- controllo umano;
-- azione finale.
-
----
-
-== Parte 17 — Cosa ricordare
-
-Se dovete ricordare solo una cosa:
-
-#alert[Il Machine Learning impara pattern dai dati per fare previsioni o decisioni su casi nuovi.]
-
-Non è magia.
-
-Non è certezza.
-
-Non è automaticamente corretto.
-
----
-
-== Messaggio chiave 1
-
-Il codice tradizionale usa regole scritte a mano.
-
-Il Machine Learning usa esempi per imparare regole implicite.
-
-Entrambi sono utili.
-
-La scelta dipende dal problema.
-
----
-
-== Messaggio chiave 2
-
-Un modello è una semplificazione della realtà.
-
-Serve a fare un compito.
-
-Può essere utile, ma può sbagliare.
-
-#alert[Il modello non è la realtà.]
-
----
-
-== Messaggio chiave 3
-
-Il workflow conta quanto l'algoritmo.
-
-Dati raccolti male, puliti male o scelti male producono modelli cattivi.
-
-#alert[La qualità dei dati è fondamentale.]
-
----
-
-== Messaggio chiave 4
-
-Valutare un modello significa capire:
-
-- quanto sbaglia;
-- dove sbaglia;
-- che tipo di errore fa;
-- quanto costa quell'errore;
-- se è accettabile nel contesto reale.
-
----
-
-== Messaggio chiave 5
-
-Il Deep Learning nasce perché alcuni dati sono troppo complessi per feature manuali.
-
-Immagini, audio, testo e video richiedono modelli capaci di imparare rappresentazioni più ricche.
-
----
-
-== Messaggio chiave 6
-
-Un modello messo in uso va monitorato.
-
-Il mondo cambia.
-
-I dati cambiano.
-
-Gli utenti cambiano.
-
-#alert[Anche i modelli devono essere mantenuti.]
-
----
-
-== Collegamento alla prossima parte
-
-Dopo aver capito come le macchine imparano dai dati, possiamo capire meglio:
-
-- Natural Language Processing;
-- modelli linguistici;
-- embeddings;
-- attenzione;
-- Large Language Models;
-- AI generativa.
-
-#alert[Gli LLM sono modelli addestrati su enormi quantità di testo.]
-
----
-
-== Slide backup — Domande per ripassare
-
-Domande rapide:
-
-- cos'è una feature?
-- cos'è un'etichetta?
-- cos'è un modello?
-- cosa significa addestrare?
-- perché dividiamo training e test?
-- cos'è overfitting?
-- classificazione e regressione sono diverse come?
-- perché il Deep Learning è utile?
-
----
-
-== Slide backup — Mini glossario
-
-- Dataset: raccolta di esempi.
-- Feature: caratteristica usata dal modello.
-- Label: risposta corretta.
-- Training: fase di apprendimento.
-- Model: sistema che produce output da input.
-- Prediction: risposta del modello.
-- Error: differenza tra previsione e realtà.
-- Overfitting: memorizzare invece di generalizzare.
-
----
-
-== Fine
-
-#alert[Fine della lezione 3]
-
-Domande?
+== Perché questa lezione serve prima degli LLM?
+
+Gli LLM sembrano molto diversi, ma sotto hanno concetti comuni:
+
+- dati;
+- parametri;
+- loss;
+- training;
+- generalizzazione;
+- valutazione;
+- bias;
+- costo computazionale.
+
+#alert[Capire il ML aiuta a capire anche l’AI generativa.]
