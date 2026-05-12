@@ -36,7 +36,7 @@
   ),
   config-info(
     title: [03 - Come imparano le macchine],
-    subtitle: [Machine Learning dai dati, spiegato semplice],
+    subtitle: [AI Generativa e Prompt Engineering @ FORMart 2026],
     author: author_list(
       (
         (first_author("Davide Domini"), "davide.domini@unibo.it"),
