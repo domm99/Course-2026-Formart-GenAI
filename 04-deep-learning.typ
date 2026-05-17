@@ -1194,6 +1194,14 @@ Non “vedono” come una persona.
 
 ---
 
+== Link utili
+
+1. #link("https://playground.tensorflow.org/")
+2. #link("https://poloclub.github.io/cnn-explainer/")
+3. #link("https://cnn-playground.live/imagenet")
+
+---
+
 #focus-slide("Reti Neurali Ricorrenti")
 
 == Che cosa sono i dati sequenziali?
